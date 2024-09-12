@@ -12,5 +12,11 @@ export class AuthModel {
   username: string;
 
   @Field(() => String)
-  role: string;
+  name: string;
+
+  @Field(() => String)
+  avatar: string;
+
+  @Field(() => String)
+  createdAt: string;
 }

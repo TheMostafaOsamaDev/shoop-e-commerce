@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize-typescript';
+import { User } from 'src/auth/entities/user.entity';
 
 export const DatabaseProvider = {
   provide: 'SEQUELIZE_CONNECTION',
@@ -10,10 +11,12 @@ export const DatabaseProvider = {
       username: process.env.USERNAME,
       password: process.env.PASSWORD,
       database: process.env.DATABASE,
-      define: {
-        freezeTableName: true,
-      },
+      // define: {
+      //   freezeTableName: true,
+      // },
     });
+
+    sequelize.addModels([User]);
 
     await sequelize.sync();
     return sequelize;

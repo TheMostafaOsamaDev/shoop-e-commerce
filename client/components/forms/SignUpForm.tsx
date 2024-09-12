@@ -23,6 +23,8 @@ import { IApiUser } from "@/types/user";
 import { logIn } from "@/lib/actions/auth.actions";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { CREATE_USER } from "@/lib/mutations/auth.mutations";
+import { apolloClient } from "@/lib/apollo-client";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -53,12 +55,38 @@ export function SignUpForm() {
     try {
       setIsLoading(true);
 
-      const res = await baseApi.post("/auth/sign-up", values);
-      const data: ApiResponse<IApiUser> = await res.data;
+      const data = await apolloClient.mutate({
+        mutation: CREATE_USER,
+        variables: {
+          createAuthInput: {
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+          },
+        },
+      });
 
-      await logIn(data.data);
+      // const data = await getClient().mutate({
+      //   mutation: CREATE_USER,
+      //   variables: {
+      //     createAuthInput: {
+      //       name: values.name,
+      //       email: values.email,
+      //       password: values.password,
+      //       confirmPassword: values.confirmPassword,
+      //     },
+      //   },
+      // });
 
-      router.push("/");
+      console.log(data);
+
+      // const res = await baseApi.post("/auth/sign-up", values);
+      // const data: ApiResponse<IApiUser> = await res.data;
+
+      // await logIn(data.data);
+
+      // router.push("/");
     } catch (error) {
       let err: any = ApiError.generate(error);
 

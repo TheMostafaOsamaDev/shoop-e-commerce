@@ -9,9 +9,29 @@ type AuthModel {
   id: ID!
   email: String!
   username: String!
-  role: String!
+  name: String!
+  avatar: String!
+  createdAt: String!
 }
 
 type Query {
-  createUser: AuthModel!
+  getUser: AuthModel!
+}
+
+type Mutation {
+  createUser(createAuthInput: CreateAuthInput!): AuthModel!
+}
+
+input CreateAuthInput {
+  """The email of the user"""
+  email: String!
+
+  """The password of the user"""
+  password: String!
+
+  """The password of the user"""
+  confirmPassword: String!
+
+  """The name of the user"""
+  name: String!
 }
