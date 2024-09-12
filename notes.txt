@@ -1,0 +1,9 @@
+
+DIALECT="mysql"
+HOST="localhost"
+PORT="3306"
+USERNAME="root"
+PASSWORD="mostafa190502"
+DATABASE="shoop"
+
+passkey="123456"
