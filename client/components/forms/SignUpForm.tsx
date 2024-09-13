@@ -55,17 +55,18 @@ export function SignUpForm() {
     try {
       setIsLoading(true);
 
-      const data = await apolloClient.mutate({
-        mutation: CREATE_USER,
-        variables: {
-          createAuthInput: {
-            name: values.name,
-            email: values.email,
-            password: values.password,
-            confirmPassword: values.confirmPassword,
+      const data: ApiResponse<{ data: { createUser: IUser } }> =
+        await apolloClient.mutate({
+          mutation: CREATE_USER,
+          variables: {
+            createAuthInput: {
+              name: values.name,
+              email: values.email,
+              password: values.password,
+              confirmPassword: values.confirmPassword,
+            },
           },
-        },
-      });
+        });
 
       // const data = await getClient().mutate({
       //   mutation: CREATE_USER,
