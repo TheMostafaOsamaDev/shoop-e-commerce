@@ -9,21 +9,6 @@ export default async function AuthProvider({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  // // createAuthorizationToken(session?.user);
-
-  // try {
-  //   const res = await fetch(`${process.env.URL}/api/sign-jwt`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(session?.user),
-  //   });
-
-  //   await res.json();
-  // } catch (error) {
-  //   console.log(error);
-  // }
 
   return (
     <TokenRefresherProvider session={session}>

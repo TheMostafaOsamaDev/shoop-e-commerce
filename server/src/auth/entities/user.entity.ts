@@ -11,6 +11,13 @@ import { DataTypes } from 'sequelize';
 
 @Table({ timestamps: true })
 export class User extends Model {
+  @Column({
+    primaryKey: true,
+    type: DataType.UUID,
+    defaultValue: DataType.UUIDV4,
+  })
+  id: string;
+
   @Column({ allowNull: false, unique: true, type: DataType.STRING })
   email: string;
 

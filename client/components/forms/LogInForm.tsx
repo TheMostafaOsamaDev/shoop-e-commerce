@@ -25,6 +25,8 @@ import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { AdminForm } from "./AdminForm";
+import { apolloClient } from "@/lib/apollo-client";
+import { LOGIN_AUTH } from "@/lib/queries/auth.query";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -50,14 +52,19 @@ export function LogInForm() {
     try {
       setIsLoading(true);
 
-      const res = await baseApi.post("/auth/log-in", values);
-      const data: ApiResponse<IApiUser> = await res.data;
-
       console.log({
-        data,
+        ...values,
       });
 
-      await logIn(data.data);
+      const data = await apolloClient.query({
+        query: LOGIN_AUTH,
+        variables: {
+          logInAuthInput: values,
+        },
+      });
+
+      if (data?.data?.logIn) await logIn(data.data.logIn);
+      else throw new Error("Invalid credentials");
 
       router.push("/");
     } catch (error) {

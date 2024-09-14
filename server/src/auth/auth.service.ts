@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateAuthInput } from './dto/create-auth.input';
-import { UpdateAuthInput } from './dto/update-auth.input';
+import { CreateAuthInput } from './input/create-auth.input';
+import { UpdateAuthInput } from './input/update-auth.input';
 import { User } from './entities/user.entity';
 import { USER_REPOSITORY } from './entities/user.provider';
 import { generateUsername } from 'src/utils/generate-username';
 import * as bcrypt from 'bcryptjs';
 import { hashPassword } from 'src/utils/hash-password';
+import { LoginAuthInput } from './input/login-auth.input';
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,30 @@ export class AuthService {
       password: hashedPassword,
       username,
     });
+
+    return {
+      ...user.toJSON(),
+      password: null,
+    };
+  }
+
+  async logIn(logInAuthInput: LoginAuthInput) {
+    const user = await this.userRepository.findOne({
+      where: { email: logInAuthInput.email },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      logInAuthInput.password,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new Error('Invalid password');
+    }
 
     return {
       ...user.toJSON(),

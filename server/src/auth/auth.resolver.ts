@@ -1,7 +1,9 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthService } from './auth.service';
 import { AuthModel } from './models/auth.model';
-import { CreateAuthInput } from './dto/create-auth.input';
+import { CreateAuthInput } from './input/create-auth.input';
+import { LoginAuthInput } from './input/login-auth.input';
+import { AdminAuthInput } from './input/admin-auth.input';
 
 @Resolver(() => AuthModel)
 export class AuthResolver {
@@ -13,7 +15,10 @@ export class AuthResolver {
   }
 
   @Query(() => AuthModel)
-  async getUser() {
-    return 'User';
+  async logIn(@Args('logInAuthInput') logInAuthInput: LoginAuthInput) {
+    return this.authService.logIn(logInAuthInput);
   }
+
+  @Query(() => AuthModel)
+  async adminAuth(@Args('adminAuthInput') adminAuthInput: AdminAuthInput) {}
 }

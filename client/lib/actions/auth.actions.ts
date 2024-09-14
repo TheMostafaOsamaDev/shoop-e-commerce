@@ -17,12 +17,14 @@ export const logOut = async () => {
 
 export const createAuthorizationToken = async (token: any) => {
   if (token) {
-    if (token.name && token.email && token.role && token.id) {
+    if (token.name && token.email && token.sub && token.username) {
       const payload = {
+        username: token.username,
         name: token.name,
         email: token.email,
         role: token.role,
-        id: token.id,
+        id: token.sub,
+        createdAt: token.createdAt,
       };
 
       const secret = `${process.env.AUTHORIZATION_SECRET}`;
@@ -32,6 +34,8 @@ export const createAuthorizationToken = async (token: any) => {
       });
 
       const authorization = `Bearer ${jwtToken}`;
+
+      console.log(authorization);
 
       cookies().set("authorization", authorization, {
         maxAge: 60 * 60 * 24 * 19,

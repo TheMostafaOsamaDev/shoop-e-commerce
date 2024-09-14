@@ -15,7 +15,24 @@ type AuthModel {
 }
 
 type Query {
-  getUser: AuthModel!
+  logIn(logInAuthInput: LoginAuthInput!): AuthModel!
+  adminAuth(adminAuthInput: AdminAuthInput!): AuthModel!
+}
+
+input LoginAuthInput {
+  """The email of the user"""
+  email: String!
+
+  """The password of the user"""
+  password: String!
+}
+
+input AdminAuthInput {
+  """The email of admin"""
+  email: String!
+
+  """Passkey of admin"""
+  passkey: String!
 }
 
 type Mutation {

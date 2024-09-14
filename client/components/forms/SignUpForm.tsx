@@ -55,39 +55,22 @@ export function SignUpForm() {
     try {
       setIsLoading(true);
 
-      const data: ApiResponse<{ data: { createUser: IUser } }> =
-        await apolloClient.mutate({
-          mutation: CREATE_USER,
-          variables: {
-            createAuthInput: {
-              name: values.name,
-              email: values.email,
-              password: values.password,
-              confirmPassword: values.confirmPassword,
-            },
+      const data = await apolloClient.mutate({
+        mutation: CREATE_USER,
+        variables: {
+          createAuthInput: {
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
           },
-        });
+        },
+      });
 
-      // const data = await getClient().mutate({
-      //   mutation: CREATE_USER,
-      //   variables: {
-      //     createAuthInput: {
-      //       name: values.name,
-      //       email: values.email,
-      //       password: values.password,
-      //       confirmPassword: values.confirmPassword,
-      //     },
-      //   },
-      // });
+      if (data?.data?.createUser) await logIn(data?.data?.createUser);
+      else throw new Error("An error occurred");
 
-      console.log(data);
-
-      // const res = await baseApi.post("/auth/sign-up", values);
-      // const data: ApiResponse<IApiUser> = await res.data;
-
-      // await logIn(data.data);
-
-      // router.push("/");
+      router.push("/auth/log-in");
     } catch (error) {
       let err: any = ApiError.generate(error);
 
