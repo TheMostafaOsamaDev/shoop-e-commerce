@@ -33,7 +33,8 @@ import {
   homeAndKitchenTypes,
 } from "@/lib/constants/products_types";
 import AddImageUploadDialog from "../AddImageUploadDialog";
-import { createProduct } from "@/lib/actions/product.actions";
+import { apolloClient } from "@/lib/apollo-client";
+import { CREATE_PRODUCT } from "@/lib/mutations/product.mutations";
 
 const formSchema = z.object({
   category: z
@@ -89,8 +90,12 @@ export function AddProductForm() {
         images,
       };
 
-      // 3. Make your API request.
-      await createProduct(reqData);
+      const res = await apolloClient.mutate({
+        mutation: CREATE_PRODUCT,
+        variables: {
+          createProductInput: reqData,
+        },
+      });
 
       toast({
         description: "Product added successfully",
@@ -101,7 +106,6 @@ export function AddProductForm() {
       // Refresh
       window.location.reload();
     } catch (error) {
-      console.log("-------------> Error |||| ", error);
       let err: any = ApiError.generate(error);
 
       if (err.status === 404) {

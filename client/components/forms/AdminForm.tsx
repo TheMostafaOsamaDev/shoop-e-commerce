@@ -13,10 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "../SubmitButton";
-import { baseApi } from "@/lib/baseApi";
 import { useState } from "react";
-import { ApiResponse } from "@/types/api";
-import { IApiUser } from "@/types/user";
 import { logIn } from "@/lib/actions/auth.actions";
 import { useRouter } from "next/navigation";
 import { ToastAction } from "@radix-ui/react-toast";
@@ -35,10 +32,11 @@ import { Button } from "../ui/button";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "../ui/label";
+import { apolloClient } from "@/lib/apollo-client";
+import { ADMIN_AUTH } from "@/lib/queries/auth.query";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -63,18 +61,24 @@ export function AdminForm({ text }: { text?: string }) {
     try {
       setIsLoading(true);
 
-      const formData = {
+      const adminAuthInput = {
         email: values.email,
         passkey,
       };
 
-      const res = await baseApi.post<ApiResponse<IApiUser>>(
-        "/auth/admin",
-        formData
-      );
-      const data = res.data.data;
+      const data = await apolloClient.query({
+        query: ADMIN_AUTH,
+        variables: {
+          adminAuthInput,
+        },
+      });
 
-      await logIn(data);
+      if (data?.data?.adminAuth)
+        await logIn({
+          ...data.data.adminAuth,
+          role: "admin",
+        });
+      else throw new Error("Invalid credentials");
 
       router.push("/dashboard");
     } catch (error) {

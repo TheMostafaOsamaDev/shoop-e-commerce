@@ -4,6 +4,7 @@ import { AuthModel } from './models/auth.model';
 import { CreateAuthInput } from './input/create-auth.input';
 import { LoginAuthInput } from './input/login-auth.input';
 import { AdminAuthInput } from './input/admin-auth.input';
+import { AdminModel } from './models/admin.model';
 
 @Resolver(() => AuthModel)
 export class AuthResolver {
@@ -19,6 +20,8 @@ export class AuthResolver {
     return this.authService.logIn(logInAuthInput);
   }
 
-  @Query(() => AuthModel)
-  async adminAuth(@Args('adminAuthInput') adminAuthInput: AdminAuthInput) {}
+  @Query(() => AdminModel)
+  async adminAuth(@Args('adminAuthInput') adminAuthInput: AdminAuthInput) {
+    return this.authService.adminAuth(adminAuthInput);
+  }
 }

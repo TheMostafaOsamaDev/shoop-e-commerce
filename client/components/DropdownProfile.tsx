@@ -14,7 +14,6 @@ import Link from "next/link";
 
 export default function DropdownProfile({ isAdmin }: { isAdmin: boolean }) {
   const handleLogOut = async () => {
-    console.log("Logging out...");
     await logOut();
   };
 

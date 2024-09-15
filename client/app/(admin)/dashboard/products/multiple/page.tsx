@@ -28,7 +28,6 @@ export default function AddMultipleProducts() {
     try {
       const res = await createMultipleProducts(tableData);
     } catch (error) {
-      console.log(error);
       const err = ApiError.generate(error);
 
       toast(err);

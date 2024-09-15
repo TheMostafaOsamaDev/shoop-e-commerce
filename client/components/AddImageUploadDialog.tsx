@@ -49,13 +49,14 @@ const AddImageUploadDialog = ({
 
         formData.append("image", file);
 
-        const res = await baseApi.post("/uploader/product/image", formData, {
+        const res = await baseApi.post("/uploader/product-image", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
 
         const data: ApiResponse<string> = await res.data;
+
 
         setImages((prev) => [...prev, data.data]);
 
@@ -80,11 +81,11 @@ const AddImageUploadDialog = ({
     try {
       if (deleteBtnRef.current) deleteBtnRef.current!.disabled = true;
 
-      const res = await baseApi.delete(`/uploader/product/image/${url}`);
+      const res = await baseApi.delete(`/uploader/product-image/${url}`);
 
-      const data: ApiResponse<string> = await res.data;
+      await res.data;
 
-      setImages((prev) => prev.filter((img) => img !== data.data));
+      setImages((prev) => prev.filter((img) => img !== url));
     } catch (error) {
       toast({
         ...ApiError.generate(error),
@@ -111,7 +112,7 @@ const AddImageUploadDialog = ({
               </Button>
 
               <Image
-                src={getAssetsUrl(`/products/${src}`)}
+                src={getAssetsUrl(`/products/_md_${src}`)}
                 width={100}
                 height={100}
                 alt={`Product image ${index}#`}

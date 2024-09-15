@@ -52,10 +52,6 @@ export function LogInForm() {
     try {
       setIsLoading(true);
 
-      console.log({
-        ...values,
-      });
-
       const data = await apolloClient.query({
         query: LOGIN_AUTH,
         variables: {

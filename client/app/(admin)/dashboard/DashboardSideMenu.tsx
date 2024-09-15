@@ -38,8 +38,7 @@ const DashboardSideMenu = () => {
             <h3 className="text-lg">Go to shop</h3>
           </Link>
         </div>
-
-        <Separator className="w-full h-[1px] bg-gray-200 my-4" />
+        <Separator className="w-full h-[1px] my-4" />
 
         <SideMenuItems />
       </aside>

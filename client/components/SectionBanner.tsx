@@ -12,7 +12,7 @@ const SectionBanner = ({
 }) => {
   return (
     <section className="flex items-center justify-between py-5 border px-3 rounded-lg bg-gradient-to-r from-green-200 to-blue-200">
-      <p>{paragraph}</p>
+      <p className="text-black">{paragraph}</p>
 
       <Button asChild className="rounded-full p-3 h-fit">
         <Link href={href}>

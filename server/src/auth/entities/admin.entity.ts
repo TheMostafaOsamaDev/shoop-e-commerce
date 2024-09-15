@@ -1,5 +1,4 @@
-import { Model } from 'sequelize';
-import { Column, DataType, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({ timestamps: true })
 export class Admin extends Model {
@@ -16,15 +15,22 @@ export class Admin extends Model {
   @Column({ allowNull: false, type: DataType.STRING })
   username: string;
 
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+    defaultValue: 'admin_user_avatar.png',
+  })
+  avatar: string;
+
   @Column({ allowNull: false, type: DataType.STRING, defaultValue: 'admin' })
   role: string;
 
-  @Column({ allowNull: false, type: DataType.STRING })
-  deletedAt: string;
+  @Column({ allowNull: true, type: DataType.DATE })
+  deletedAt: Date;
 
-  @Column({ allowNull: false, type: DataType.STRING })
-  lastLogin: string;
+  @Column({ allowNull: true, type: DataType.DATE })
+  lastLogin: Date;
 
-  @Column({ allowNull: false, type: DataType.STRING })
-  lastLogout: string;
+  @Column({ allowNull: true, type: DataType.DATE })
+  lastLogout: Date;
 }

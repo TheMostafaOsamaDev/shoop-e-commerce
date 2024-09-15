@@ -5,7 +5,6 @@ import {
   DataType,
   BeforeCreate,
 } from 'sequelize-typescript';
-// import { UserRole } from 'src/utils/user-role.enum';
 import { generateUsername } from 'src/utils/generate-username';
 import { DataTypes } from 'sequelize';
 

@@ -12,3 +12,16 @@ export const LOGIN_AUTH = gql`
     }
   }
 `;
+
+export const ADMIN_AUTH = gql`
+  query AdminAuth($adminAuthInput: AdminAuthInput!) {
+    adminAuth(adminAuthInput: $adminAuthInput) {
+      avatar
+      createdAt
+      email
+      id
+      username
+      role
+    }
+  }
+`;

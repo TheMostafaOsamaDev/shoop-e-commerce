@@ -14,9 +14,30 @@ type AuthModel {
   createdAt: String!
 }
 
+"""Authentication"""
+type AdminModel {
+  id: ID!
+  email: String!
+  username: String!
+  avatar: String!
+  createdAt: String!
+  role: String!
+}
+
+type Product {
+  id: Int!
+  title: String!
+  price: Float!
+  quantity: Int!
+  category: String!
+  subCategory: String!
+  images: [String!]!
+}
+
 type Query {
   logIn(logInAuthInput: LoginAuthInput!): AuthModel!
-  adminAuth(adminAuthInput: AdminAuthInput!): AuthModel!
+  adminAuth(adminAuthInput: AdminAuthInput!): AdminModel!
+  product(id: Int!): Product!
 }
 
 input LoginAuthInput {
@@ -37,6 +58,9 @@ input AdminAuthInput {
 
 type Mutation {
   createUser(createAuthInput: CreateAuthInput!): AuthModel!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: Int!): Product!
 }
 
 input CreateAuthInput {
@@ -51,4 +75,23 @@ input CreateAuthInput {
 
   """The name of the user"""
   name: String!
+}
+
+input CreateProductInput {
+  title: String!
+  price: Float!
+  quantity: Int!
+  category: String!
+  subCategory: String!
+  images: [String!]!
+}
+
+input UpdateProductInput {
+  title: String
+  price: Float
+  quantity: Int
+  category: String
+  subCategory: String
+  images: [String!]
+  id: Int!
 }

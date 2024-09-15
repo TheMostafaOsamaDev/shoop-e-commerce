@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 
 export const logIn = async (props: IApiUser) => {
   const data = await signIn("credentials", props);
-  console.log(data);
 };
 
 export const logOut = async () => {
@@ -34,8 +33,6 @@ export const createAuthorizationToken = async (token: any) => {
       });
 
       const authorization = `Bearer ${jwtToken}`;
-
-      console.log(authorization);
 
       cookies().set("authorization", authorization, {
         maxAge: 60 * 60 * 24 * 19,

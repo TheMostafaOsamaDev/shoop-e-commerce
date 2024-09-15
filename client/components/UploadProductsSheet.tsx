@@ -22,6 +22,7 @@ export default function UploadProductsSheet({
     const file = acceptedFiles[0];
 
     Papa.parse(file, {
+      // @ts-ignore
       complete: (result) => {
         if (result.data.length === 0) {
           return toast({

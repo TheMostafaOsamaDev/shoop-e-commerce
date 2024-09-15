@@ -1,5 +1,8 @@
 import { Sequelize } from 'sequelize-typescript';
+import { Admin } from 'src/auth/entities/admin.entity';
 import { User } from 'src/auth/entities/user.entity';
+import { Product } from 'src/dashboard/product/entities/product.entity';
+import { ProductImage } from 'src/uploader/entities/product-image.entity';
 
 export const DatabaseProvider = {
   provide: 'SEQUELIZE_CONNECTION',
@@ -16,7 +19,7 @@ export const DatabaseProvider = {
       // },
     });
 
-    sequelize.addModels([User]);
+    sequelize.addModels([User, Admin, Product, ProductImage]);
 
     await sequelize.sync();
     return sequelize;
