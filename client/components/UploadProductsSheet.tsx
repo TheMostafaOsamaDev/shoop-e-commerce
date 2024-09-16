@@ -42,6 +42,7 @@ export default function UploadProductsSheet({
               "Sub category": row[2],
               Price: row[3] + " $",
               Quantity: row[4],
+              images: row[5],
             };
 
             data.push(objectData);
