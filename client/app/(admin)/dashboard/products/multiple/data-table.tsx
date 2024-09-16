@@ -35,7 +35,7 @@ export function DataTable<TData, TValue>({
   console.log(data);
 
   return (
-    <div className="rounded-md border">
+    <div className="rounded-md border w-full max-w-full overflow-x-auto">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -70,20 +70,22 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => {
+                  const header = cell.column.columnDef.header;
+
                   return (
                     <TableCell
                       key={cell.id}
-                      className={"px-6 py-4 whitespace-nowrap text-sm "}
+                      className={`px-6 py-4 text-sm ${
+                        header === "Images" ? "text-center" : ""
+                      } whitespace-wrap`}
                     >
                       {cell.column.columnDef.header === "Images" ? (
-                        <Button>View</Button>
+                        <ViewImages
+                          images={cell.getContext().getValue() as string}
+                        />
                       ) : (
                         sliceText(cell.getContext().getValue() as string, 50)
                       )}
-                      {/* {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )} */}
                     </TableCell>
                   );
                 })}
@@ -112,10 +114,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export function ViewImages({ images }: { images: string }) {
+  const imagesArray = images?.split(",");
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -125,12 +127,25 @@ export function ViewImages({ images }: { images: string }) {
         <DialogHeader>
           <DialogTitle>All images </DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            The list of images that are associated with this product.
+            <br />
+            <p className="text-foreground text-xs font-medium">
+              Note: Please make sure that all the images is uploaded correctly.
+            </p>
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <div className="grid grid-cols-2 gap-2">
+            {imagesArray?.map((image, index) => (
+              <img
+                key={index}
+                src={image}
+                alt={`Image ${index + 1}`}
+                className="w-full h-40 object-cover rounded-md"
+              />
+            ))}
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
