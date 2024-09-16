@@ -3,8 +3,11 @@ import { ProductService } from './product.service';
 import { Product } from './models/product.model';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
+import { UseGuards } from '@nestjs/common';
+import { AdminGuard } from 'src/guards/admin.guard';
 
 @Resolver(() => Product)
+@UseGuards(AdminGuard)
 export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
@@ -15,15 +18,23 @@ export class ProductResolver {
     return this.productService.create(createProductInput);
   }
 
-  @Query(() => [Product], { name: 'product' })
-  findAll() {
-    return this.productService.findAll();
+  @Mutation(() => [Product])
+  createMultipleProducts(
+    @Args('createProductInputs', { type: () => [CreateProductInput] })
+    createProductInputs: CreateProductInput[],
+  ) {
+    return this.productService.createMultiple(createProductInputs);
   }
 
-  @Query(() => Product, { name: 'product' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.productService.findOne(id);
-  }
+  // @Query(() => [Product], { name: 'product' })
+  // findAll() {
+  //   return this.productService.findAll();
+  // }
+
+  // @Query(() => Product, { name: 'product' })
+  // findOne(@Args('id', { type: () => Int }) id: number) {
+  //   return this.productService.findOne(id);
+  // }
 
   @Mutation(() => Product)
   updateProduct(

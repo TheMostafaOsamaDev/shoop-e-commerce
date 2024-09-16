@@ -32,8 +32,6 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
-  console.log(data);
-
   return (
     <div className="rounded-md border w-full max-w-full overflow-x-auto">
       <Table>
@@ -114,6 +112,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Image from "next/image";
 
 export function ViewImages({ images }: { images: string }) {
   const imagesArray = images?.split(",");
@@ -127,22 +126,22 @@ export function ViewImages({ images }: { images: string }) {
         <DialogHeader>
           <DialogTitle>All images </DialogTitle>
           <DialogDescription>
-            The list of images that are associated with this product.
-            <br />
-            <p className="text-foreground text-xs font-medium">
+            <span className="text-secondary-foreground text-xs font-medium">
               Note: Please make sure that all the images is uploaded correctly.
-            </p>
+            </span>
           </DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             {imagesArray?.map((image, index) => (
-              <img
+              <Image
+                width={100}
+                height={100}
                 key={index}
                 src={image}
                 alt={`Image ${index + 1}`}
-                className="w-full h-40 object-cover rounded-md"
+                className="w-[150px] object-cover rounded-md border p-2"
               />
             ))}
           </div>

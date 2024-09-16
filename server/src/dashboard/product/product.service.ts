@@ -62,6 +62,12 @@ export class ProductService {
     console.log(createProductInput);
   }
 
+  async createMultiple(createProductInputs: CreateProductInput[]) {
+    // console.log(createProductInputs);
+
+    return 'success';
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} product`;
   }

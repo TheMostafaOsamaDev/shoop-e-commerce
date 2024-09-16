@@ -202,4 +202,9 @@
   .section-header p {
     @apply text-sm font-medium text-muted-foreground;
   }
+
+  /* Loader */
+  .loader {
+    @apply size-14 animate-spin duration-700  rounded-full border-2 border-t-primary border-r-primary;
+  }
 }

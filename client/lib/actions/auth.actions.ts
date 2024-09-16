@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { signIn, signOut } from "@/auth";
 import { IApiUser } from "@/types/user";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const logIn = async (props: IApiUser) => {
   const data = await signIn("credentials", props);
@@ -16,7 +17,7 @@ export const logOut = async () => {
 
 export const createAuthorizationToken = async (token: any) => {
   if (token) {
-    if (token.name && token.email && token.sub && token.username) {
+    if (token.email && token.sub && token.username) {
       const payload = {
         username: token.username,
         name: token.name,
@@ -49,4 +50,29 @@ export const createAuthorizationToken = async (token: any) => {
 
 export const getAuthorizationToken = () => {
   return cookies()?.get("authorization")?.value;
+};
+
+export const checkAuthorizationAdmin = async () => {
+  let token = await getAuthorizationToken();
+
+  if (!token) {
+    return false;
+  }
+
+  token = token.replace("Bearer ", "");
+
+  const secret = `${process.env.AUTHORIZATION_SECRET}`;
+
+  try {
+    const decoded = jwt.verify(token, secret);
+
+    // @ts-ignore
+    if (decoded.role === "admin") {
+      return true;
+    }
+
+    redirect("/");
+  } catch (error) {
+    return false;
+  }
 };

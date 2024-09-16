@@ -2,11 +2,13 @@
 import React from "react";
 import UploadProductsSheet from "@/components/UploadProductsSheet";
 import { DataTable } from "./data-table";
-import { columns, ProductTableData } from "./columns";
+import { columns } from "./columns";
 import { Button } from "@/components/ui/button";
 import { ApiError } from "@/lib/api-error";
 import { useToast } from "@/components/ui/use-toast";
 import { createMultipleProducts } from "@/lib/actions/product.actions";
+import { apolloClient } from "@/lib/apollo-client";
+import { CREATE_MULTIPLE_PRODUCTS } from "@/lib/mutations/product.mutations";
 
 export default function AddMultipleProducts() {
   const [tableData, setTableData] = React.useState<any[]>([]);
@@ -26,8 +28,22 @@ export default function AddMultipleProducts() {
 
   const handleSave = async () => {
     try {
-      const res = await createMultipleProducts(tableData);
+      const preparedData = tableData.map((data) => {
+        return {
+          title: data?.Title,
+          price: +data?.Price?.replaceAll("$", "")?.trim(),
+          quantity: +data?.Quantity,
+          category: data?.Category,
+          subCategory: data?.["Sub category"],
+          images: data?.Images?.split(",")?.map((image: string) =>
+            image.trim()
+          ),
+        };
+      });
+
+      const res = await createMultipleProducts(preparedData);
     } catch (error) {
+      console.log(error);
       const err = ApiError.generate(error);
 
       toast(err);
