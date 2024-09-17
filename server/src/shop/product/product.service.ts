@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
+import { Inject, Injectable } from '@nestjs/common';
+import { GetHomeProductsInput } from './dto/get-home-products.input';
+import { PRODUCT_REPOSITORY } from 'src/dashboard/product/entities/product.provider';
+import { Product } from 'src/dashboard/product/entities/product.entity';
+import { HomeProducts } from './models/home-product.model';
+import { ProductImage } from 'src/uploader/entities/product-image.entity';
 
 @Injectable()
 export class ProductService {
-  create(createProductInput: CreateProductInput) {
-    return 'This action adds a new product';
-  }
+  constructor(
+    @Inject(PRODUCT_REPOSITORY) private productRepository: typeof Product,
+  ) {}
 
-  findAll() {
-    return `This action returns all product`;
-  }
+  async getFeaturedProducts(getHomeProductsInput: GetHomeProductsInput) {
+    const limit = getHomeProductsInput.limit || 10;
+    const offset = getHomeProductsInput.offset || 0;
+    const category = getHomeProductsInput.category || '';
+    const subCategory = getHomeProductsInput.subCategory || '';
+    let where = {};
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
+    if (category) {
+      where = {
+        ...where,
+        category,
+      };
+    }
 
-  update(id: number, updateProductInput: UpdateProductInput) {
-    return `This action updates a #${id} product`;
-  }
+    if (subCategory) {
+      where = {
+        ...where,
+        subCategory,
+      };
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+    const featured = await this.productRepository.findAll({
+      limit,
+      offset,
+      where,
+      include: [{ model: ProductImage, limit }],
+    });
+
+    return featured;
   }
 }

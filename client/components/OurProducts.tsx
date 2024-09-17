@@ -1,20 +1,38 @@
 import React from "react";
 import SectionHeader from "./SectionHeader";
-// import { getProducts } from "@/lib/actions/product.actions";
 import { ApiError } from "@/lib/api-error";
 import ProductGrid from "./ProductGrid";
+import { getFeaturedProducts } from "@/lib/actions/product.actions";
+import MessageAlert from "./MessageAlert";
 
 export default async function OurProducts() {
   let content;
 
   try {
-    // const res: { getHomeProducts: Product[] } = await getProducts({});
-    // content = <ProductGrid products={res.getHomeProducts} />;
+    const res = await getFeaturedProducts({
+      limit: 12,
+      offset: 0,
+      category: "",
+      subCategory: "",
+    });
+
+    const data: Product[] = res?.data?.getFeaturedProducts;
+
+    if (data?.length === 0)
+      content = <MessageAlert title="" description="No product where found" />;
+
+    content = <ProductGrid products={data} />;
   } catch (error) {
     // Log the error
     ApiError.log(error);
 
-    content = <p>There was an error loading the products</p>;
+    content = (
+      <MessageAlert
+        title="Sorry"
+        description="Failed to fetch products"
+        variant="destructive"
+      />
+    );
   }
 
   return (

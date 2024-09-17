@@ -39,9 +39,27 @@ type MultipleProducts {
   message: String!
 }
 
+type ProductImage {
+  id: Int!
+  url: String!
+  publicId: String!
+  isExternal: Boolean!
+}
+
+type SingleHomeProduct {
+  id: Int!
+  title: String!
+  price: Float!
+  quantity: Int!
+  category: String!
+  subCategory: String!
+  images: [ProductImage!]!
+}
+
 type Query {
   logIn(logInAuthInput: LoginAuthInput!): AuthModel!
   adminAuth(adminAuthInput: AdminAuthInput!): AdminModel!
+  getFeaturedProducts(GetHomeProductsInput: GetHomeProductsInput!): [SingleHomeProduct!]!
 }
 
 input LoginAuthInput {
@@ -58,6 +76,13 @@ input AdminAuthInput {
 
   """Passkey of admin"""
   passkey: String!
+}
+
+input GetHomeProductsInput {
+  limit: Int!
+  offset: Int!
+  category: String!
+  subCategory: String!
 }
 
 type Mutation {

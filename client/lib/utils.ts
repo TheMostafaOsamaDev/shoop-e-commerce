@@ -16,8 +16,22 @@ export const wrapFileName = (fileName: string, length: number = 15) => {
 };
 
 // Get assets URL
-export const getAssetsUrl = (path: string) => {
-  return `${process.env.NEXT_PUBLIC_BACKEND_UPLOADS_URL}/${path}`;
+export const getAssetsUrl = (
+  path: string,
+  isExternal?: boolean,
+  route?: string
+) => {
+  console.log({
+    path,
+    isExternal,
+    route,
+    NEXT_PUBLIC_BACKEND_UPLOADS_URL:
+      process.env.NEXT_PUBLIC_BACKEND_UPLOADS_URL,
+  });
+
+  if (isExternal) return path;
+
+  return `${process.env.NEXT_PUBLIC_BACKEND_UPLOADS_URL}/${route}/${path}`;
 };
 
 // Formatter category && subCategory

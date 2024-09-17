@@ -3,7 +3,13 @@ interface Product {
   title: string;
   price: number;
   quantity: number;
-  images: { name: string; id: string }[];
+  images: { url: string; id: string; isExternal: boolean }[];
   category: string;
   subCategory: string;
 }
+
+type HomeProducts = {
+  topSold: Product[];
+  topRated: Product[];
+  featured: Product[];
+};

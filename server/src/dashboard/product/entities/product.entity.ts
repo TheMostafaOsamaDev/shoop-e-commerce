@@ -25,6 +25,9 @@ export class Product extends Model {
   @Column({ allowNull: false, type: DataType.INTEGER })
   quantity: number;
 
+  @Column({ defaultValue: 0, type: DataType.INTEGER })
+  sold: number;
+
   @Column({
     allowNull: false,
     type: DataType.ENUM(...arrayToSnakeCase(Object.values(ProductCategories))),

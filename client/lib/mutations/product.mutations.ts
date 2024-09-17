@@ -13,12 +13,17 @@ export const CREATE_PRODUCT = gql`
 `;
 
 export const CREATE_MULTIPLE_PRODUCTS = gql`
-  mutation createMultipleProducts(
-    $createProductInputs: [CreateProductInput!]!
-  ) {
-    createMultipleProducts(createProductInputs: $createProductInputs) {
-      message
-      counts
+  query GetHomeProducts($getHomeProductsInput: GetHomeProductsInput!) {
+    getHomeProducts(GetHomeProductsInput: $getHomeProductsInput) {
+      category
+      images {
+        url
+        isExternal
+        id
+      }
+      subCategory
+      quantity
+      title
     }
   }
 `;
