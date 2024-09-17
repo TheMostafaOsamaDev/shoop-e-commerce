@@ -35,9 +35,12 @@ export default function AddMultipleProducts() {
           quantity: +data?.Quantity,
           category: data?.Category,
           subCategory: data?.["Sub category"],
-          images: data?.Images?.split(",")?.map((image: string) =>
-            image.trim()
-          ),
+          images: data?.Images?.split(",")?.map((image: string) => {
+            return {
+              url: image.trim(),
+              isExternal: true,
+            };
+          }),
         };
       });
 

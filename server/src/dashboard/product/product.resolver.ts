@@ -26,16 +26,6 @@ export class ProductResolver {
     return this.productService.createMultiple(createProductInputs);
   }
 
-  // @Query(() => [Product], { name: 'product' })
-  // findAll() {
-  //   return this.productService.findAll();
-  // }
-
-  // @Query(() => Product, { name: 'product' })
-  // findOne(@Args('id', { type: () => Int }) id: number) {
-  //   return this.productService.findOne(id);
-  // }
-
   @Mutation(() => Product)
   updateProduct(
     @Args('updateProductInput') updateProductInput: UpdateProductInput,

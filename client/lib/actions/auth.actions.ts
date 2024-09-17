@@ -48,18 +48,18 @@ export const createAuthorizationToken = async (token: any) => {
   }
 };
 
-export const getAuthorizationToken = () => {
+export const getAuthorizationToken = async () => {
   return cookies()?.get("authorization")?.value;
 };
 
 export const checkAuthorizationAdmin = async () => {
-  let token = await getAuthorizationToken();
+  let originalToken = await getAuthorizationToken();
 
-  if (!token) {
+  if (!originalToken) {
     return false;
   }
 
-  token = token.replace("Bearer ", "");
+  const token = originalToken.replace("Bearer ", "");
 
   const secret = `${process.env.AUTHORIZATION_SECRET}`;
 
@@ -68,7 +68,7 @@ export const checkAuthorizationAdmin = async () => {
 
     // @ts-ignore
     if (decoded.role === "admin") {
-      return true;
+      return originalToken;
     }
 
     redirect("/");

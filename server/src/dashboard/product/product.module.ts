@@ -3,6 +3,7 @@ import { ProductService } from './product.service';
 import { ProductResolver } from './product.resolver';
 import { ProductProvider } from './entities/product.provider';
 import { ProductImageProvider } from 'src/uploader/entities/product-image.provider';
+import { AdminProvider } from 'src/auth/entities/admin.provider';
 
 @Module({
   providers: [
@@ -10,6 +11,7 @@ import { ProductImageProvider } from 'src/uploader/entities/product-image.provid
     ProductService,
     ProductProvider,
     ProductImageProvider,
+    AdminProvider,
   ],
 })
 export class ProductModule {}

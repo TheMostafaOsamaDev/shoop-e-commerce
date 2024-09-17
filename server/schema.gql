@@ -24,6 +24,11 @@ type AdminModel {
   role: String!
 }
 
+type ProductImage {
+  name: String!
+  isExternal: Boolean!
+}
+
 type Product {
   id: Int!
   title: String!
@@ -31,7 +36,7 @@ type Product {
   quantity: Int!
   category: String!
   subCategory: String!
-  images: [String!]!
+  images: [ProductImage!]!
 }
 
 type Query {

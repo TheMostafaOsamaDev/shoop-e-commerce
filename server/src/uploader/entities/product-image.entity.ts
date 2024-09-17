@@ -21,6 +21,10 @@ export class ProductImage extends Model {
   @Column({ allowNull: false, type: DataType.STRING })
   url: string;
 
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
+  // A name determines that if the image from an external source
+  isExternal: boolean;
+
   @ForeignKey(() => Product)
   @Column({
     allowNull: true,
