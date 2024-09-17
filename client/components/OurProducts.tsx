@@ -1,6 +1,6 @@
 import React from "react";
 import SectionHeader from "./SectionHeader";
-import { getProducts } from "@/lib/actions/product.actions";
+// import { getProducts } from "@/lib/actions/product.actions";
 import { ApiError } from "@/lib/api-error";
 import ProductGrid from "./ProductGrid";
 
@@ -8,9 +8,8 @@ export default async function OurProducts() {
   let content;
 
   try {
-    const res: { getHomeProducts: Product[] } = await getProducts({});
-
-    content = <ProductGrid products={res.getHomeProducts} />;
+    // const res: { getHomeProducts: Product[] } = await getProducts({});
+    // content = <ProductGrid products={res.getHomeProducts} />;
   } catch (error) {
     // Log the error
     ApiError.log(error);

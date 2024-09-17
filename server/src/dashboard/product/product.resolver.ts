@@ -5,6 +5,7 @@ import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { UseGuards } from '@nestjs/common';
 import { AdminGuard } from 'src/guards/admin.guard';
+import { MultipleProducts } from './models/multiple-products.model';
 
 @Resolver(() => Product)
 @UseGuards(AdminGuard)
@@ -18,7 +19,7 @@ export class ProductResolver {
     return this.productService.create(createProductInput);
   }
 
-  @Mutation(() => [Product])
+  @Mutation(() => MultipleProducts)
   createMultipleProducts(
     @Args('createProductInputs', { type: () => [CreateProductInput] })
     createProductInputs: CreateProductInput[],

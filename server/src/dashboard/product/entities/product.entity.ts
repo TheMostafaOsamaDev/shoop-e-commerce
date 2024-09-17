@@ -16,7 +16,7 @@ export class Product extends Model {
   })
   id: number;
 
-  @Column({ allowNull: false, type: DataType.STRING, unique: true })
+  @Column({ allowNull: false, type: DataType.TEXT })
   title: string;
 
   @Column({ allowNull: false, type: DataType.FLOAT })

@@ -17,13 +17,8 @@ export const CREATE_MULTIPLE_PRODUCTS = gql`
     $createProductInputs: [CreateProductInput!]!
   ) {
     createMultipleProducts(createProductInputs: $createProductInputs) {
-      id
-      title
-      price
-      quantity
-      images
-      category
-      subCategory
+      message
+      counts
     }
   }
 `;

@@ -11,17 +11,10 @@ export const createMultipleProducts = async (products: any) => {
     return redirect("/");
   }
 
-  const res = await apolloClient.mutate({
+  return await apolloClient.mutate({
     mutation: CREATE_MULTIPLE_PRODUCTS,
     variables: {
       createProductInputs: products,
     },
   });
-
-  // const response = await apolloClient.mutate({
-  //   mutation: CREATE_MULTIPLE_PRODUCTS,
-  //   variables: {
-  //     createProductInputs: products,
-  //   },
-  // });
 };

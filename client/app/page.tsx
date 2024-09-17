@@ -1,6 +1,6 @@
 import MainCarousel from "@/components/carousel/MainCarousel";
 import TopSellingProductCard from "@/components/TopSellingProductCard";
-// import OurProducts from "../components/OurProducts";
+import OurProducts from "../components/OurProducts";
 
 export default function Home() {
   return (
@@ -18,7 +18,7 @@ export default function Home() {
 
       {/* Out Products */}
 
-      {/* <OurProducts /> */}
+      <OurProducts />
     </div>
   );
 }

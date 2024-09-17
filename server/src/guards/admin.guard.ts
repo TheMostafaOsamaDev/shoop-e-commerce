@@ -25,7 +25,8 @@ export class AdminGuard implements CanActivate {
 
     // If not GraphQL, fall back to HTTP
     const request = gqlRequest || context.switchToHttp().getRequest();
-    const authorization = request.headers['authorization'];
+    const authorization =
+      request.headers['authorization'] || request.authorization;
 
     if (!authorization) {
       throw new Error('Unauthorized');

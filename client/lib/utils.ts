@@ -19,3 +19,7 @@ export const wrapFileName = (fileName: string, length: number = 15) => {
 export const getAssetsUrl = (path: string) => {
   return `${process.env.NEXT_PUBLIC_BACKEND_UPLOADS_URL}/${path}`;
 };
+
+// Formatter category && subCategory
+export const categoryFormatter = (value: any) =>
+  value.replaceAll("'", "`").replaceAll(" ", "_").toUpperCase();

@@ -4,8 +4,10 @@ import { User } from 'src/auth/entities/user.entity';
 import { Product } from 'src/dashboard/product/entities/product.entity';
 import { ProductImage } from 'src/uploader/entities/product-image.entity';
 
+export const SEQUELIZE_CONNECTION = 'SEQUELIZE_CONNECTION';
+
 export const DatabaseProvider = {
-  provide: 'SEQUELIZE_CONNECTION',
+  provide: SEQUELIZE_CONNECTION,
   useFactory: async () => {
     const sequelize = new Sequelize({
       dialect: process.env.DIALECT as any,
@@ -17,6 +19,13 @@ export const DatabaseProvider = {
       // define: {
       //   freezeTableName: true,
       // },
+      dialectOptions: {
+        charset: 'utf8mb4',
+      },
+      define: {
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_unicode_ci',
+      },
     });
 
     sequelize.addModels([User, Admin, Product, ProductImage]);

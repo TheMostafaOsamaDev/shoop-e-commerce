@@ -1,5 +1,4 @@
 import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
-import { ProductImage } from './image.model';
 
 @ObjectType()
 export class Product {
@@ -21,6 +20,6 @@ export class Product {
   @Field(() => String)
   subCategory: string;
 
-  @Field(() => [ProductImage])
-  images: ProductImage[];
+  @Field(() => [String])
+  images: String[];
 }

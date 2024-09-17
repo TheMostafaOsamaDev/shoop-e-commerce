@@ -24,11 +24,6 @@ type AdminModel {
   role: String!
 }
 
-type ProductImage {
-  name: String!
-  isExternal: Boolean!
-}
-
 type Product {
   id: Int!
   title: String!
@@ -36,7 +31,12 @@ type Product {
   quantity: Int!
   category: String!
   subCategory: String!
-  images: [ProductImage!]!
+  images: [String!]!
+}
+
+type MultipleProducts {
+  counts: Int!
+  message: String!
 }
 
 type Query {
@@ -63,7 +63,7 @@ input AdminAuthInput {
 type Mutation {
   createUser(createAuthInput: CreateAuthInput!): AuthModel!
   createProduct(createProductInput: CreateProductInput!): Product!
-  createMultipleProducts(createProductInputs: [CreateProductInput!]!): [Product!]!
+  createMultipleProducts(createProductInputs: [CreateProductInput!]!): MultipleProducts!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
 }

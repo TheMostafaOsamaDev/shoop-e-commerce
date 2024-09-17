@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={poppins.className + " relative"}>
+      <body className={poppins.className + " relative overflow-hidden"}>
         <AuthProvider>
           <ThemeProvider
             attribute="class"

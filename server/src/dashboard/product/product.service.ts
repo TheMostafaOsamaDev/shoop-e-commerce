@@ -6,7 +6,8 @@ import { Product } from './entities/product.entity';
 import { PRODUCT_IMAGE_REPOSITORY } from 'src/uploader/entities/product-image.provider';
 import { ProductImage } from 'src/uploader/entities/product-image.entity';
 import { Op } from 'sequelize';
-import { createResponse } from 'src/utils/create-response';
+import { Sequelize } from 'sequelize-typescript';
+import { SEQUELIZE_CONNECTION } from 'src/database/database.provider';
 
 @Injectable()
 export class ProductService {
@@ -14,6 +15,7 @@ export class ProductService {
     @Inject(PRODUCT_REPOSITORY) private productRepository: typeof Product,
     @Inject(PRODUCT_IMAGE_REPOSITORY)
     private productImageRepository: typeof ProductImage,
+    @Inject(SEQUELIZE_CONNECTION) private readonly sequelize: Sequelize,
   ) {}
 
   async create(createProductInput: CreateProductInput) {
@@ -63,9 +65,50 @@ export class ProductService {
   }
 
   async createMultiple(createProductInputs: CreateProductInput[]) {
-    // console.log(createProductInputs);
+    const transaction = await this.sequelize.transaction();
+    let counter = 0;
 
-    return 'success';
+    try {
+      for (const product of createProductInputs) {
+        const { title, price, quantity, category, subCategory, images } =
+          product;
+
+        const newProduct = await Product.create(
+          {
+            title,
+            price,
+            quantity,
+            category,
+            subCategory,
+          },
+          { transaction },
+        );
+
+        const imageRecords = images.map((image) => ({
+          url: image,
+          productId: newProduct.id,
+          isExternal: true,
+        }));
+
+        await ProductImage.bulkCreate(imageRecords, { transaction });
+
+        counter++;
+      }
+
+      await transaction.commit();
+      console.log('Operation completed successfully');
+    } catch (error) {
+      console.log('Operation failed, rolling back transaction');
+      console.log(error);
+      await transaction.rollback();
+
+      throw error;
+    }
+
+    return {
+      message: 'Operation completed successfully',
+      counts: counter,
+    };
   }
 
   findOne(id: number) {

@@ -13,6 +13,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { UploaderModule } from './uploader/uploader.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ShopModule } from './shop/shop.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     DatabaseModule,
     UploaderModule,
     DashboardModule,
+    ShopModule,
   ],
   controllers: [AppController],
   providers: [AppService],
