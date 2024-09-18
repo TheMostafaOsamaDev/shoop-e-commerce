@@ -1,7 +1,10 @@
 "use server";
 import { redirect } from "next/navigation";
 import { apolloClient } from "../apollo-client";
-import { CREATE_MULTIPLE_PRODUCTS } from "../mutations/product.mutations";
+import {
+  CREATE_MULTIPLE_PRODUCTS,
+  ADD_TO_CART,
+} from "../mutations/product.mutations";
 import { checkAuthorizationAdmin, getAuthorizationToken } from "./auth.actions";
 import {
   GET_FEATURED_PRODUCTS,
@@ -45,6 +48,30 @@ export const getSingleProduct = async (id: string) => {
       headers: {
         authorization: token ? `${token}` : "",
       },
+    },
+  });
+};
+
+export const addToCart = async (formData: FormData) => {
+  const productId = formData.get("productId");
+  const quantity = Number(formData.get("quantity") || 1);
+
+  const token = await getAuthorizationToken();
+
+  return await apolloClient.mutate({
+    mutation: ADD_TO_CART,
+    variables: {
+      productId,
+      quantity,
+    },
+    context: {
+      headers: {
+        authorization: token ? `${token}` : "",
+      },
+    },
+    update: (cache, { data }) => {
+      console.log("~~~~~~~~~~~~ Cached data ~~~~~~~~~~~~", cache);
+      console.log("~~~~~~~~~~~~ Data ~~~~~~~~~~~~", data);
     },
   });
 };

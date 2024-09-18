@@ -27,3 +27,14 @@ export const CREATE_MULTIPLE_PRODUCTS = gql`
     }
   }
 `;
+
+export const ADD_TO_CART = gql`
+  mutation AddToCart($productId: String!, $quantity: Float!) {
+    addToCart(productId: $productId, quantity: $quantity) {
+      message
+      productId
+      success
+      userId
+    }
+  }
+`;

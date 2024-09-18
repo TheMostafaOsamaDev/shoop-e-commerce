@@ -54,6 +54,7 @@ type SingleHomeProduct {
   category: String!
   subCategory: String!
   images: [ProductImage!]!
+  isInCart: Boolean
 }
 
 type Query {
@@ -92,6 +93,7 @@ type Mutation {
   createMultipleProducts(createProductInputs: [CreateProductInput!]!): MultipleProducts!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
+  addToCart(productId: String!, quantity: Float!): Product!
 }
 
 input CreateAuthInput {

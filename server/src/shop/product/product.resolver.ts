@@ -1,10 +1,13 @@
 import { GetHomeProductsInput } from './dto/get-home-products.input';
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Resolver, Query, Args, Mutation, Context } from '@nestjs/graphql';
 import { ProductService } from './product.service';
 import { SingleHomeProduct } from './models/single-home-product.model';
-import { Req, UseInterceptors } from '@nestjs/common';
-import { Request } from 'express';
+import { ExecutionContext, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtDecoderInterceptor } from 'src/interceptors/jwt-decoder.interceptors';
+import { UserGuard } from 'src/guards/user.guard';
+import { Cart } from '../entities/cart.entity';
+import { CartModel } from './models/cart.model';
+import { Product } from 'src/dashboard/product/models/product.model';
 
 @Resolver(() => GetHomeProductsInput)
 export class ProductResolver {
@@ -19,7 +22,22 @@ export class ProductResolver {
 
   @Query(() => SingleHomeProduct, { name: 'getSingleProduct' })
   @UseInterceptors(JwtDecoderInterceptor)
-  getSingleProduct(@Args('id') id: string, @Req() req: Request) {
-    return this.productService.getSingleProduct(id, req);
+  getSingleProduct(
+    @Args('id') id: string,
+    @Context() context: ExecutionContext,
+  ) {
+    // @ts-ignore
+    return this.productService.getSingleProduct(id, context?.req);
+  }
+
+  @Mutation(() => Product, { name: 'addToCart' })
+  @UseGuards(UserGuard)
+  addToCart(
+    @Args('productId') productId: string,
+    @Args('quantity') quantity: number,
+    @Context() context: ExecutionContext,
+  ) {
+    // @ts-ignore
+    return this.productService.addToCart(productId, quantity, context?.req);
   }
 }

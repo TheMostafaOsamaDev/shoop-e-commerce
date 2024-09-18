@@ -6,4 +6,7 @@ import { ProductImage } from './product-image.model';
 export class SingleHomeProduct extends OmitType(Product, ['images']) {
   @Field(() => [ProductImage])
   images: ProductImage[];
+
+  @Field(() => Boolean, { nullable: true })
+  isInCart?: boolean;
 }

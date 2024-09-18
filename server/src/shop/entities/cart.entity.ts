@@ -6,14 +6,14 @@ import { User } from 'src/auth/entities/user.entity';
 
 @Table({ timestamps: true })
 export class Cart extends Model {
-  @Column({ type: DataTypes.INTEGER, allowNull: false })
+  @Column({ type: DataTypes.INTEGER, defaultValue: 1 })
   quantity: number;
 
   @Column({ type: DataTypes.INTEGER, allowNull: false })
   @ForeignKey(() => Product)
   productId: number;
 
-  @Column({ type: DataTypes.INTEGER, allowNull: false })
+  @Column({ type: DataTypes.CHAR(36), allowNull: false })
   @ForeignKey(() => User)
-  userId: number;
+  userId: string;
 }

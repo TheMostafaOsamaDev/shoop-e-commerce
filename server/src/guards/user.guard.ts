@@ -5,16 +5,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Observable } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
-import { ADMIN_REPOSITORY } from 'src/auth/entities/admin.provider';
-import { Admin } from 'src/auth/entities/admin.entity';
+import { USER_REPOSITORY } from 'src/auth/entities/user.provider';
+import { User } from 'src/auth/entities/user.entity';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
-  constructor(
-    @Inject(ADMIN_REPOSITORY) private adminRepository: typeof Admin,
-  ) {}
+export class UserGuard implements CanActivate {
+  constructor(@Inject(USER_REPOSITORY) private userRepository: typeof User) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Check if it's a GraphQL request
@@ -42,15 +39,15 @@ export class AdminGuard implements CanActivate {
       throw new Error('Unauthorized');
     }
 
-    const admin = await this.adminRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { email: decoded.email },
     });
 
-    if (!admin) {
+    if (!user) {
       throw new Error('Unauthorized');
     }
 
-    request.user = admin;
+    request.user = user.dataValues;
 
     return true;
   }
