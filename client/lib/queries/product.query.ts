@@ -27,6 +27,7 @@ export const GET_SINGLE_PRODUCT = gql`
       subCategory
       title
       category
+      isInCart
       images {
         id
         isExternal

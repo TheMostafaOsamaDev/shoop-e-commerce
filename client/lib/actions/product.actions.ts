@@ -70,8 +70,33 @@ export const addToCart = async (formData: FormData) => {
       },
     },
     update: (cache, { data }) => {
-      console.log("~~~~~~~~~~~~ Cached data ~~~~~~~~~~~~", cache);
-      console.log("~~~~~~~~~~~~ Data ~~~~~~~~~~~~", data);
+      if (!data?.addToCart) return;
+
+      const existingProduct = cache.readQuery<{ getSingleProduct: Product }>({
+        query: GET_SINGLE_PRODUCT,
+        variables: {
+          getSingleProductId: productId,
+        },
+      });
+
+      if (existingProduct?.getSingleProduct) {
+        let newProduct = {
+          ...existingProduct.getSingleProduct,
+          isInCart: true,
+        };
+
+        console.log(newProduct);
+
+        cache.writeQuery({
+          query: GET_SINGLE_PRODUCT,
+          variables: {
+            getSingleProductId: productId,
+          },
+          data: {
+            getSingleProduct: newProduct,
+          },
+        });
+      }
     },
   });
 };

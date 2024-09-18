@@ -5,8 +5,6 @@ import { SingleHomeProduct } from './models/single-home-product.model';
 import { ExecutionContext, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtDecoderInterceptor } from 'src/interceptors/jwt-decoder.interceptors';
 import { UserGuard } from 'src/guards/user.guard';
-import { Cart } from '../entities/cart.entity';
-import { CartModel } from './models/cart.model';
 import { Product } from 'src/dashboard/product/models/product.model';
 
 @Resolver(() => GetHomeProductsInput)

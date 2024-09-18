@@ -19,8 +19,10 @@ export default async function SingleProductPage(props: {
   const { productId } = props.params;
   const headersList = headers();
   const fullUrl = headersList.get("referer") || "";
-  const parsedUrl = new URL(fullUrl || "");
-  const pathname = parsedUrl.pathname;
+  let parsedUrl,
+    pathname: string = "";
+  if (fullUrl) parsedUrl = new URL(fullUrl || "");
+  if (parsedUrl) pathname = parsedUrl.pathname;
 
   let product;
 
@@ -95,7 +97,11 @@ export default async function SingleProductPage(props: {
           Available items: {product?.quantity}
         </p>
 
-        <CartButton productId={productId} returnUrl={pathname} />
+        <CartButton
+          productId={productId}
+          returnUrl={pathname}
+          isInCart={product?.isInCart}
+        />
       </div>
     </div>
   );

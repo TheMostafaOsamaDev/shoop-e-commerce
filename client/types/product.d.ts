@@ -6,6 +6,7 @@ interface Product {
   images: { url: string; id: string; isExternal: boolean }[];
   category: string;
   subCategory: string;
+  isInCart?: boolean;
 }
 
 type HomeProducts = {
