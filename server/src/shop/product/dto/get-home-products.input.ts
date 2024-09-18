@@ -8,9 +8,9 @@ export class GetHomeProductsInput {
   @Field(() => Int)
   offset: number;
 
-  @Field()
+  @Field(() => String)
   category: string;
 
-  @Field()
+  @Field(() => String)
   subCategory: string;
 }

@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/components/providers/auth-provider";
 import ToastMessageProvider from "@/components/providers/toast-message-provider";
+import ApolloWrapperProvider from "@/components/providers/apollo-wrapper-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -32,10 +33,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <ToastMessageProvider>
-              <Header />
-              {children}
-            </ToastMessageProvider>
+            <ApolloWrapperProvider>
+              <ToastMessageProvider>
+                <Header />
+                {children}
+              </ToastMessageProvider>
+            </ApolloWrapperProvider>
 
             <Toaster />
           </ThemeProvider>

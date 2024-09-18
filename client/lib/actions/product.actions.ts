@@ -1,6 +1,6 @@
 "use server";
 import { redirect } from "next/navigation";
-import { apolloClient } from "../apollo-client";
+import { apolloClient, getClient } from "../apollo-client";
 import {
   CREATE_MULTIPLE_PRODUCTS,
   ADD_TO_CART,
@@ -10,6 +10,7 @@ import {
   GET_FEATURED_PRODUCTS,
   GET_SINGLE_PRODUCT,
 } from "../queries/product.query";
+import { categoryFormatter } from "../utils";
 
 export const createMultipleProducts = async (products: any) => {
   const token = await checkAuthorizationAdmin();
@@ -27,11 +28,16 @@ export const createMultipleProducts = async (products: any) => {
 };
 
 export const getFeaturedProducts = async (variables: GetProductsVariables) => {
-  // with caching
+  const { category, subCategory } = variables;
+
   return await apolloClient.query({
     query: GET_FEATURED_PRODUCTS,
     variables: {
-      getHomeProductsInput: variables,
+      getHomeProductsInput: {
+        ...variables,
+        category: categoryFormatter(category),
+        subCategory: categoryFormatter(subCategory),
+      },
     },
   });
 };
@@ -39,7 +45,7 @@ export const getFeaturedProducts = async (variables: GetProductsVariables) => {
 export const getSingleProduct = async (id: string) => {
   const token = await getAuthorizationToken();
 
-  return await apolloClient.query<{ getSingleProduct: Product }>({
+  const response = await getClient().query({
     query: GET_SINGLE_PRODUCT,
     variables: {
       getSingleProductId: id,
@@ -50,6 +56,8 @@ export const getSingleProduct = async (id: string) => {
       },
     },
   });
+
+  return response;
 };
 
 export const addToCart = async (formData: FormData) => {
@@ -58,7 +66,7 @@ export const addToCart = async (formData: FormData) => {
 
   const token = await getAuthorizationToken();
 
-  return await apolloClient.mutate({
+  const response = await getClient().mutate({
     mutation: ADD_TO_CART,
     variables: {
       productId,
@@ -70,7 +78,8 @@ export const addToCart = async (formData: FormData) => {
       },
     },
     update: (cache, { data }) => {
-      if (!data?.addToCart) return;
+      const addToCart: Product = data?.addToCart;
+      if (!addToCart) return;
 
       const existingProduct = cache.readQuery<{ getSingleProduct: Product }>({
         query: GET_SINGLE_PRODUCT,
@@ -80,12 +89,11 @@ export const addToCart = async (formData: FormData) => {
       });
 
       if (existingProduct?.getSingleProduct) {
-        let newProduct = {
+        const newProduct = {
           ...existingProduct.getSingleProduct,
+          quantity: addToCart.quantity,
           isInCart: true,
         };
-
-        console.log(newProduct);
 
         cache.writeQuery({
           query: GET_SINGLE_PRODUCT,
@@ -99,4 +107,6 @@ export const addToCart = async (formData: FormData) => {
       }
     },
   });
+
+  return redirect("/cart");
 };

@@ -38,7 +38,7 @@ export default async function CartButton({
 
   if (isInCart) {
     return (
-      <Button asChild className={buttonClasses} variant={"secondary"}>
+      <Button asChild className={buttonClasses} variant={"outline"}>
         <Link href={"/cart"}>
           <BadgeCheck size={28} />
           <span className="flex-1 text-lg text-center">Added. Go to Cart</span>

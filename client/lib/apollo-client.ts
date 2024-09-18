@@ -27,3 +27,7 @@ export const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
   link: authLink.concat(httpLink),
 });
+
+// For Server-Side Rendering
+import { registerApolloClient } from "@apollo/experimental-nextjs-app-support/rsc";
+export const { getClient } = registerApolloClient(() => apolloClient);
