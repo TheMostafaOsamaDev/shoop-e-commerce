@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { auth_routes } from "./lib/constants";
+import { NextResponse } from "next/server";
 
 export default auth((req) => {
   const isAuthRoute = auth_routes.includes(req.nextUrl.pathname);
@@ -15,6 +16,8 @@ export default auth((req) => {
   if (isAdminRoute && !isAdmin) {
     return Response.redirect(newUrl);
   }
+
+  return NextResponse.next();
 });
 
 export const config = {

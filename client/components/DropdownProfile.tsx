@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import { logOut } from "@/lib/actions/auth.actions";
 import Link from "next/link";
 
-export default function DropdownProfile({ isAdmin }: { isAdmin: boolean }) {
+export default function DropdownProfile() {
   const handleLogOut = async () => {
     await logOut();
   };
@@ -25,13 +25,6 @@ export default function DropdownProfile({ isAdmin }: { isAdmin: boolean }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-full font-medium">
-        <DropdownMenuSeparator />
-        {isAdmin && (
-          <DropdownMenuItem asChild>
-            <Link href="/dashboard">Dashboard</Link>
-          </DropdownMenuItem>
-        )}
-
         <DropdownMenuItem>Profile</DropdownMenuItem>
         <DropdownMenuItem>Wishlist</DropdownMenuItem>
 

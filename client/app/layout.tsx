@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { ThemeProvider } from "next-themes";
 import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/components/providers/auth-provider";
+import ToastMessageProvider from "@/components/providers/toast-message-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -31,8 +32,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            {children}
+            <ToastMessageProvider>
+              <Header />
+              {children}
+            </ToastMessageProvider>
 
             <Toaster />
           </ThemeProvider>

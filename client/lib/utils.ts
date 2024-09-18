@@ -21,14 +21,6 @@ export const getAssetsUrl = (
   isExternal?: boolean,
   route?: string
 ) => {
-  console.log({
-    path,
-    isExternal,
-    route,
-    NEXT_PUBLIC_BACKEND_UPLOADS_URL:
-      process.env.NEXT_PUBLIC_BACKEND_UPLOADS_URL,
-  });
-
   if (isExternal) return path;
 
   return `${process.env.NEXT_PUBLIC_BACKEND_UPLOADS_URL}/${route}/${path}`;

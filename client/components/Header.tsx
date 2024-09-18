@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import SearchBar from "./SearchBar";
-import { ShoppingCart, User } from "lucide-react";
+import { LayoutDashboard, ShoppingCart, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./ToggleMode";
 import LoaderButton from "./ui/loader-btn";
@@ -30,12 +30,6 @@ const Header = () => {
             <AuthButtons />
           </Suspense>
 
-          <Button asChild className="btn-icon-container">
-            <Link href="/cart">
-              <ShoppingCart /> Cart
-            </Link>
-          </Button>
-
           <ModeToggle />
         </div>
       </div>
@@ -54,10 +48,31 @@ const AuthButtons = async () => {
     </Button>
   );
 
-  return session?.user ? (
-    <DropdownProfile isAdmin={session?.user?.role === "admin"} />
-  ) : (
-    logInButton
+  const cartLink = (
+    <Link href="/cart">
+      <ShoppingCart /> Cart
+    </Link>
+  );
+
+  const dashboardLink = (
+    <Link href="/dashboard">
+      <LayoutDashboard /> Dashboard
+    </Link>
+  );
+
+  const secondButton = (
+    <Button asChild className="btn-icon-container">
+      {session?.user?.role === "admin" ? dashboardLink : cartLink}
+    </Button>
+  );
+
+  const primaryButton = session?.user ? <DropdownProfile /> : logInButton;
+
+  return (
+    <>
+      {primaryButton}
+      {secondButton}
+    </>
   );
 };
 

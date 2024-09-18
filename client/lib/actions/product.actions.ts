@@ -2,8 +2,11 @@
 import { redirect } from "next/navigation";
 import { apolloClient } from "../apollo-client";
 import { CREATE_MULTIPLE_PRODUCTS } from "../mutations/product.mutations";
-import { checkAuthorizationAdmin } from "./auth.actions";
-import { GET_FEATURED_PRODUCTS } from "../queries/product.query";
+import { checkAuthorizationAdmin, getAuthorizationToken } from "./auth.actions";
+import {
+  GET_FEATURED_PRODUCTS,
+  GET_SINGLE_PRODUCT,
+} from "../queries/product.query";
 
 export const createMultipleProducts = async (products: any) => {
   const token = await checkAuthorizationAdmin();
@@ -26,6 +29,22 @@ export const getFeaturedProducts = async (variables: GetProductsVariables) => {
     query: GET_FEATURED_PRODUCTS,
     variables: {
       getHomeProductsInput: variables,
+    },
+  });
+};
+
+export const getSingleProduct = async (id: string) => {
+  const token = await getAuthorizationToken();
+
+  return await apolloClient.query<{ getSingleProduct: Product }>({
+    query: GET_SINGLE_PRODUCT,
+    variables: {
+      getSingleProductId: id,
+    },
+    context: {
+      headers: {
+        authorization: token ? `${token}` : "",
+      },
     },
   });
 };

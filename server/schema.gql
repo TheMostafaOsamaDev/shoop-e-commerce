@@ -42,7 +42,7 @@ type MultipleProducts {
 type ProductImage {
   id: Int!
   url: String!
-  publicId: String!
+  publicId: String
   isExternal: Boolean!
 }
 
@@ -60,6 +60,7 @@ type Query {
   logIn(logInAuthInput: LoginAuthInput!): AuthModel!
   adminAuth(adminAuthInput: AdminAuthInput!): AdminModel!
   getFeaturedProducts(GetHomeProductsInput: GetHomeProductsInput!): [SingleHomeProduct!]!
+  getSingleProduct(id: String!): SingleHomeProduct!
 }
 
 input LoginAuthInput {

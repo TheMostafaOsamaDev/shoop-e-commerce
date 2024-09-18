@@ -4,8 +4,18 @@ import { ApiError } from "@/lib/api-error";
 import ProductGrid from "./ProductGrid";
 import { getFeaturedProducts } from "@/lib/actions/product.actions";
 import MessageAlert from "./MessageAlert";
+import { auth } from "@/auth";
 
 export default async function OurProducts() {
+  // Get the user session
+  const session = await auth();
+  let isAdmin = false;
+
+  if (session?.user) {
+    isAdmin = session?.user?.role === "admin";
+  }
+
+  // Get the featured products
   let content;
 
   try {
@@ -21,7 +31,7 @@ export default async function OurProducts() {
     if (data?.length === 0)
       content = <MessageAlert title="" description="No product where found" />;
 
-    content = <ProductGrid products={data} />;
+    content = <ProductGrid products={data} isAdmin={isAdmin} />;
   } catch (error) {
     // Log the error
     ApiError.log(error);

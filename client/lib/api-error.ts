@@ -5,6 +5,14 @@ export class ApiError {
   private static _statusCode: number;
   private static _description?: string;
 
+  static makeError(message: string, status: number) {
+    const error = new Error(message);
+    // @ts-ignore
+    error.error = status;
+
+    return error;
+  }
+
   static generate(
     error: any,
     alt?: string
@@ -25,7 +33,7 @@ export class ApiError {
     } else if (alt) this._title = alt;
     else this._title = "An error occurred";
 
-    this._statusCode = error?.response?.status || 500;
+    this._statusCode = error?.response?.status || error?.error || 500;
 
     if (error?.response?.data?.error) {
       this._description = error?.response?.data?.error;

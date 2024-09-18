@@ -8,8 +8,8 @@ export class ProductImage {
   @Field(() => String)
   url: string;
 
-  @Field(() => String)
-  publicId: string;
+  @Field(() => String, { nullable: true })
+  publicId: string | null;
 
   @Field(() => Boolean)
   isExternal: boolean;

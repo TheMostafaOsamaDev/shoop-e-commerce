@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,12 +12,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "../SubmitButton";
-import { baseApi } from "@/lib/baseApi";
 import { useState } from "react";
-import { ApiResponse } from "@/types/api";
-import { IApiUser } from "@/types/user";
 import { logIn } from "@/lib/actions/auth.actions";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ToastAction } from "@radix-ui/react-toast";
 import { ApiError } from "@/lib/api-error";
 import { useToast } from "../ui/use-toast";
@@ -37,6 +33,8 @@ export function LogInForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const params = useSearchParams();
+  const returnUrl = params.get("returnUrl");
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,7 +60,7 @@ export function LogInForm() {
       if (data?.data?.logIn) await logIn(data.data.logIn);
       else throw new Error("Invalid credentials");
 
-      router.push("/");
+      router.push(returnUrl || "/");
     } catch (error) {
       let err: any = ApiError.generate(error);
 
