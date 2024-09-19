@@ -1,5 +1,8 @@
 import { ApiError } from "@/lib/api-error";
 import MessageAlert from "./MessageAlert";
+import { getFeaturedProducts } from "@/lib/actions/product.actions";
+import ProductGrid from "./ProductGrid";
+import { auth } from "@/auth";
 
 export default async function SimilarProducts({
   category,
@@ -10,7 +13,33 @@ export default async function SimilarProducts({
 }) {
   let content;
   try {
-    throw new Error("This is an error");
+    const session = await auth();
+
+    const res = await getFeaturedProducts({
+      category: "",
+      subCategory: "",
+      limit: 4,
+      offset: 0,
+    });
+
+    if (res?.data?.getFeaturedProducts) {
+      const products = res.data.getFeaturedProducts as Product[];
+
+      content = (
+        <ProductGrid
+          products={products}
+          isAdmin={session?.user?.role === "admin"}
+        />
+      );
+    } else {
+      content = (
+        <MessageAlert
+          variant="default"
+          title=""
+          description="No similar products found"
+        />
+      );
+    }
   } catch (error) {
     const { title } = ApiError.generate(error);
 
@@ -23,9 +52,5 @@ export default async function SimilarProducts({
     );
   }
 
-  return (
-    <div>
-      {category} - {subCategory}
-    </div>
-  );
+  return <div>{content}</div>;
 }

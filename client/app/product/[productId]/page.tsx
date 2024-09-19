@@ -6,9 +6,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 import { headers } from "next/headers";
-import { Separator } from "@/components/ui/separator";
 import CartButton from "@/components/CartButton";
 import SimilarProducts from "@/components/SimilarProducts";
+import { Separator } from "@/components/ui/separator";
+import SectionHeader from "@/components/SectionHeader";
 
 export default async function SingleProductPage(props: {
   params: {
@@ -106,6 +107,11 @@ export default async function SingleProductPage(props: {
           />
         </div>
       </div>
+
+      <SectionHeader separatorClasses="my-8">
+        <h2>Similar Products</h2>
+        <p>You might also like these products based on your recent activity.</p>
+      </SectionHeader>
 
       <SimilarProducts
         category={product?.category}

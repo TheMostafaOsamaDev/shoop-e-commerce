@@ -1,6 +1,6 @@
 "use server";
 import { redirect } from "next/navigation";
-import { apolloClient, getClient } from "../apollo-client";
+import { getClient } from "../apollo-client";
 import {
   CREATE_MULTIPLE_PRODUCTS,
   ADD_TO_CART,
@@ -19,7 +19,7 @@ export const createMultipleProducts = async (products: any) => {
     return redirect("/");
   }
 
-  return await apolloClient.mutate({
+  return await getClient()?.mutate({
     mutation: CREATE_MULTIPLE_PRODUCTS,
     variables: {
       createProductInputs: products,
@@ -30,7 +30,7 @@ export const createMultipleProducts = async (products: any) => {
 export const getFeaturedProducts = async (variables: GetProductsVariables) => {
   const { category, subCategory } = variables;
 
-  return await apolloClient.query({
+  return await getClient()?.query({
     query: GET_FEATURED_PRODUCTS,
     variables: {
       getHomeProductsInput: {
@@ -45,7 +45,7 @@ export const getFeaturedProducts = async (variables: GetProductsVariables) => {
 export const getSingleProduct = async (id: string) => {
   const token = await getAuthorizationToken();
 
-  const response = await getClient().query({
+  const response = await getClient()?.query({
     query: GET_SINGLE_PRODUCT,
     variables: {
       getSingleProductId: id,
@@ -66,7 +66,7 @@ export const addToCart = async (formData: FormData) => {
 
   const token = await getAuthorizationToken();
 
-  const response = await getClient().mutate({
+  const response = await getClient()?.mutate({
     mutation: ADD_TO_CART,
     variables: {
       productId,

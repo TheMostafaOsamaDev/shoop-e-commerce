@@ -21,7 +21,7 @@ import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { AdminForm } from "./AdminForm";
-import { apolloClient } from "@/lib/apollo-client";
+import { getClient } from "@/lib/apollo-client";
 import { LOGIN_AUTH } from "@/lib/queries/auth.query";
 
 const formSchema = z.object({
@@ -50,7 +50,7 @@ export function LogInForm() {
     try {
       setIsLoading(true);
 
-      const data = await apolloClient.query({
+      const data = await getClient().query({
         query: LOGIN_AUTH,
         variables: {
           logInAuthInput: values,
