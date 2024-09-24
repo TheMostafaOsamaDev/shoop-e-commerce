@@ -1,19 +1,21 @@
-import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GetHomeProductsInput } from './dto/get-home-products.input';
 import { PRODUCT_REPOSITORY } from 'src/dashboard/product/entities/product.provider';
 import { Product } from 'src/dashboard/product/entities/product.entity';
 import { ProductImage } from 'src/uploader/entities/product-image.entity';
 import { Request } from 'express';
-import { GqlExecutionContext } from '@nestjs/graphql';
 import { User } from 'src/auth/entities/user.entity';
 import { CART_REPOSITORY } from '../entities/cart.provider';
 import { Cart } from '../entities/cart.entity';
+import { WISHLIST_REPOSITORY } from '../entities/wishlist.provider';
+import { SendMessage } from 'src/models/send-message.model';
 
 @Injectable()
 export class ProductService {
   constructor(
     @Inject(PRODUCT_REPOSITORY) private productRepository: typeof Product,
     @Inject(CART_REPOSITORY) private cartRepository: typeof Cart,
+    @Inject(WISHLIST_REPOSITORY) private wishlistRepository: typeof Cart,
   ) {}
 
   async getFeaturedProducts(getHomeProductsInput: GetHomeProductsInput) {
@@ -110,5 +112,25 @@ export class ProductService {
     }
 
     return product;
+  }
+
+  async toggleWishlist(productId: string, req: Request): Promise<SendMessage> {
+    // @ts-ignore
+    const user: User = req.user;
+
+    const product = await this.productRepository.findByPk(productId);
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    console.log(product);
+
+    return {
+      message: 'Product added to wishlist',
+      status: 200,
+      where: 'toggleWishlist',
+      data: product.id.toString(),
+    };
   }
 }

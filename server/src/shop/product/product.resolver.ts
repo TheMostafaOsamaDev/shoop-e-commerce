@@ -6,6 +6,7 @@ import { ExecutionContext, UseGuards, UseInterceptors } from '@nestjs/common';
 import { JwtDecoderInterceptor } from 'src/interceptors/jwt-decoder.interceptors';
 import { UserGuard } from 'src/guards/user.guard';
 import { Product } from 'src/dashboard/product/models/product.model';
+import { SendMessage } from 'src/models/send-message.model';
 
 @Resolver(() => GetHomeProductsInput)
 export class ProductResolver {
@@ -37,5 +38,15 @@ export class ProductResolver {
   ) {
     // @ts-ignore
     return this.productService.addToCart(productId, quantity, context?.req);
+  }
+
+  @Mutation(() => SendMessage, { name: 'toggleWishlist' })
+  @UseGuards(UserGuard)
+  toggleWishlist(
+    @Args('productId') productId: string,
+    @Context() context: ExecutionContext,
+  ) {
+    // @ts-ignore
+    return this.productService.toggleWishlist(productId, context?.req);
   }
 }

@@ -4,6 +4,7 @@ import { getClient } from "../apollo-client";
 import {
   CREATE_MULTIPLE_PRODUCTS,
   ADD_TO_CART,
+  TOGGLE_WISHLIST,
 } from "../mutations/product.mutations";
 import { checkAuthorizationAdmin, getAuthorizationToken } from "./auth.actions";
 import {
@@ -11,6 +12,7 @@ import {
   GET_SINGLE_PRODUCT,
 } from "../queries/product.query";
 import { categoryFormatter } from "../utils";
+import { auth } from "@/auth";
 
 export const createMultipleProducts = async (products: any) => {
   const token = await checkAuthorizationAdmin();
@@ -109,4 +111,43 @@ export const addToCart = async (formData: FormData) => {
   });
 
   return redirect("/cart");
+};
+
+export const toggleWishList = async (formData: FormData) => {
+  const productId = formData.get("productId");
+  const session = await auth();
+  const token = await getAuthorizationToken();
+
+  if (!session?.user || !productId || !token) {
+    return redirect("/auth/log-in");
+  }
+
+  const res = await getClient()?.mutate({
+    mutation: TOGGLE_WISHLIST,
+    variables: {
+      productId,
+    },
+    context: {
+      headers: {
+        authorization: token ? `${token}` : "",
+      },
+    },
+    update: (cache, { data }) => {
+      const toggleWishlist = data?.toggleWishlist;
+      const resData = toggleWishlist?.data;
+
+      if (!resData) return;
+
+      const productId = +resData;
+
+      const singleProduct = cache.readQuery<{ getSingleProduct: Product }>({
+        query: GET_SINGLE_PRODUCT,
+        variables: {
+          getSingleProductId: productId,
+        },
+      });
+
+      console.log(singleProduct);
+    },
+  });
 };

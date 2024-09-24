@@ -22,14 +22,11 @@ const httpLink = new HttpLink({
   credentials: "include", // Include cookies if necessary
 });
 
-// CLient Side Apollo Client
-const apolloClient = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: authLink.concat(httpLink),
-});
-
 // For Server-Side Rendering
 import { registerApolloClient } from "@apollo/experimental-nextjs-app-support";
-export const { getClient } = registerApolloClient
-  ? registerApolloClient(() => apolloClient)
-  : { getClient: () => {} };
+export const { getClient } = registerApolloClient(() => {
+  return new ApolloClient({
+    cache: new InMemoryCache(),
+    link: httpLink,
+  });
+});

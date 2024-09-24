@@ -40,3 +40,14 @@ export const ADD_TO_CART = gql`
     }
   }
 `;
+
+export const TOGGLE_WISHLIST = gql`
+  mutation ToggleWishlist($productId: String!) {
+    toggleWishlist(productId: $productId) {
+      message
+      status
+      where
+      data
+    }
+  }
+`;

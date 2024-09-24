@@ -10,6 +10,7 @@ import CartButton from "@/components/CartButton";
 import SimilarProducts from "@/components/SimilarProducts";
 import { Separator } from "@/components/ui/separator";
 import SectionHeader from "@/components/SectionHeader";
+import WishListButton from "@/components/WishListButton";
 
 export default async function SingleProductPage(props: {
   params: {
@@ -38,9 +39,7 @@ export default async function SingleProductPage(props: {
   } catch (error) {
     const err = ApiError.generate(error);
 
-    if (err.status === 404) {
-      return notFound();
-    }
+    return notFound();
   }
 
   const imageParam = Number(searchParams?.image) || 1;
@@ -100,11 +99,15 @@ export default async function SingleProductPage(props: {
             Available items: {product?.quantity}
           </p>
 
-          <CartButton
-            productId={productId}
-            returnUrl={pathname}
-            isInCart={product?.isInCart}
-          />
+          <div className="flex items-center gap-4">
+            <CartButton
+              productId={productId}
+              returnUrl={pathname}
+              isInCart={product?.isInCart}
+            />
+
+            <WishListButton productId={productId} buttonClassName="h-fit p-5" />
+          </div>
         </div>
       </div>
 

@@ -57,6 +57,13 @@ type SingleHomeProduct {
   isInCart: Boolean
 }
 
+type SendMessage {
+  message: String!
+  status: Float!
+  where: String!
+  data: String
+}
+
 type Query {
   logIn(logInAuthInput: LoginAuthInput!): AuthModel!
   adminAuth(adminAuthInput: AdminAuthInput!): AdminModel!
@@ -94,6 +101,7 @@ type Mutation {
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
   addToCart(productId: String!, quantity: Float!): Product!
+  toggleWishlist(productId: String!): SendMessage!
 }
 
 input CreateAuthInput {
