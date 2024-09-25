@@ -7,6 +7,7 @@ interface Product {
   category: string;
   subCategory: string;
   isInCart?: boolean;
+  isInWishlist?: boolean;
 }
 
 type HomeProducts = {

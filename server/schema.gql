@@ -55,6 +55,7 @@ type SingleHomeProduct {
   subCategory: String!
   images: [ProductImage!]!
   isInCart: Boolean
+  isInWishlist: Boolean
 }
 
 type SendMessage {

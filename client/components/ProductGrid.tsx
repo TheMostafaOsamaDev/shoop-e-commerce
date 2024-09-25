@@ -29,7 +29,7 @@ export default function ProductGrid({
                   className="absolute top-2 right-2"
                   productId={p.id}
                   disabled={isAdmin}
-                  isWishList={p.isInCart}
+                  isWishList={p.isInWishlist}
                 />
 
                 <Link href={`/product/${p.id}`}>

@@ -13,19 +13,20 @@ export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
   @Query(() => [SingleHomeProduct], { name: 'getFeaturedProducts' })
+  @UseInterceptors(JwtDecoderInterceptor)
   getFeaturedProducts(
     @Args('GetHomeProductsInput') getHomeProductsInput: GetHomeProductsInput,
+    @Context() context: any,
   ) {
-    return this.productService.getFeaturedProducts(getHomeProductsInput);
+    return this.productService.getFeaturedProducts(
+      getHomeProductsInput,
+      context?.req,
+    );
   }
 
   @Query(() => SingleHomeProduct, { name: 'getSingleProduct' })
   @UseInterceptors(JwtDecoderInterceptor)
-  getSingleProduct(
-    @Args('id') id: string,
-    @Context() context: ExecutionContext,
-  ) {
-    // @ts-ignore
+  getSingleProduct(@Args('id') id: string, @Context() context: any) {
     return this.productService.getSingleProduct(id, context?.req);
   }
 
@@ -44,9 +45,8 @@ export class ProductResolver {
   @UseGuards(UserGuard)
   toggleWishlist(
     @Args('productId') productId: string,
-    @Context() context: ExecutionContext,
+    @Context() context: any,
   ) {
-    // @ts-ignore
     return this.productService.toggleWishlist(productId, context?.req);
   }
 }

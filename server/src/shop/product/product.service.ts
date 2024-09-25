@@ -9,6 +9,9 @@ import { CART_REPOSITORY } from '../entities/cart.provider';
 import { Cart } from '../entities/cart.entity';
 import { WISHLIST_REPOSITORY } from '../entities/wishlist.provider';
 import { SendMessage } from 'src/models/send-message.model';
+import { Wishlist } from '../entities/wishlist.entity';
+import { Sequelize } from 'sequelize-typescript';
+import { AnyFunction } from 'sequelize/types/utils';
 
 @Injectable()
 export class ProductService {
@@ -18,11 +21,15 @@ export class ProductService {
     @Inject(WISHLIST_REPOSITORY) private wishlistRepository: typeof Cart,
   ) {}
 
-  async getFeaturedProducts(getHomeProductsInput: GetHomeProductsInput) {
+  async getFeaturedProducts(
+    getHomeProductsInput: GetHomeProductsInput,
+    req: Request,
+  ) {
     const limit = getHomeProductsInput.limit || 10;
     const offset = getHomeProductsInput.offset || 0;
     const category = getHomeProductsInput.category || '';
     const subCategory = getHomeProductsInput.subCategory || '';
+    const userId = req?.user?.id;
     let where = {};
 
     if (category) {
@@ -39,14 +46,39 @@ export class ProductService {
       };
     }
 
+    let include: any = [{ model: ProductImage, limit }];
+
+    let attributes = {
+      include: [],
+    };
+
+    if (userId) {
+      include.push({
+        model: Wishlist,
+        required: false,
+        where: { userId },
+        attributes: [],
+      });
+      // TODO: Fix its order given it to you
+      attributes.include.push([
+        Sequelize.literal(`(
+          SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+          FROM Wishlists AS w
+          WHERE w.productId = Product.id AND w.userId = '${userId}'
+        )`),
+        'isInWishlist',
+      ]);
+    }
+
     const featured = await this.productRepository.findAll({
       limit,
       offset,
       where,
-      include: [{ model: ProductImage, limit }],
+      include,
+      attributes,
     });
 
-    return featured;
+    return featured.map((f) => f.dataValues);
   }
 
   async getSingleProduct(id: string, req: Request) {
@@ -60,7 +92,8 @@ export class ProductService {
       include: [{ model: ProductImage }],
     });
 
-    let isInCart = false;
+    let isInCart = false,
+      isInWishlist = false;
 
     if (user) {
       const cart = await this.cartRepository.findOne({
@@ -69,15 +102,28 @@ export class ProductService {
           userId: user.id,
         },
       });
+      const wishlist = await this.wishlistRepository.findOne({
+        where: {
+          productId: id,
+          userId: user.id,
+        },
+      });
+
+      console.log(wishlist);
 
       if (cart) {
         isInCart = true;
+      }
+
+      if (wishlist) {
+        isInWishlist = true;
       }
     }
 
     return {
       ...product.toJSON(),
       isInCart,
+      isInWishlist,
     };
   }
 
@@ -124,7 +170,29 @@ export class ProductService {
       throw new NotFoundException('Product not found');
     }
 
-    console.log(product);
+    let wishlist = await this.wishlistRepository.findOne({
+      where: {
+        productId: product.id,
+        userId: user.id,
+      },
+    });
+
+    if (wishlist) {
+      wishlist.destroy();
+      return {
+        message: 'Product removed from wishlist',
+        status: 200,
+        where: 'toggleWishlist',
+        data: product.id.toString(),
+      };
+    }
+
+    wishlist = await this.wishlistRepository.create({
+      productId: product.id,
+      userId: user.id,
+    });
+
+    await wishlist.save();
 
     return {
       message: 'Product added to wishlist',

@@ -6,3 +6,20 @@ type WishlistResponse = {
     productId: number;
   };
 };
+
+import { Request } from 'express';
+import { User } from 'src/auth/entities/user.entity';
+
+declare module 'express' {
+  export interface Request {
+    user?: User;
+  }
+}
+
+import { ExecutionContext } from '@nestjs/common';
+// Property 'req' does not exist on type 'ExecutionContext'.
+declare module 'context' {
+  export interface ExecutionContext {
+    req: Request;
+  }
+}

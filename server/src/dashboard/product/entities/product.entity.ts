@@ -1,4 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Wishlist } from 'src/shop/entities/wishlist.entity';
 import { ProductImage } from 'src/uploader/entities/product-image.entity';
 import { arrayToSnakeCase } from 'src/utils/array-to-snake-case';
 import {
@@ -44,4 +45,7 @@ export class Product extends Model {
 
   @HasMany(() => ProductImage)
   images: ProductImage[];
+
+  @HasMany(() => Wishlist)
+  wishlist: Wishlist[];
 }

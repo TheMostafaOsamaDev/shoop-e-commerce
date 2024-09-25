@@ -9,4 +9,7 @@ export class SingleHomeProduct extends OmitType(Product, ['images']) {
 
   @Field(() => Boolean, { nullable: true })
   isInCart?: boolean;
+
+  @Field(() => Boolean, { nullable: true })
+  isInWishlist?: boolean;
 }

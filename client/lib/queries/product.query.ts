@@ -14,6 +14,7 @@ export const GET_FEATURED_PRODUCTS = gql`
       title
       price
       id
+      isInWishlist
     }
   }
 `;
@@ -28,6 +29,7 @@ export const GET_SINGLE_PRODUCT = gql`
       title
       category
       isInCart
+      isInWishlist
       images {
         id
         isExternal

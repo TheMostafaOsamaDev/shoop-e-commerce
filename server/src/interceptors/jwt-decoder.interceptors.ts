@@ -30,10 +30,12 @@ export class JwtDecoderInterceptor implements NestInterceptor {
       request.headers['authorization'] || request.authorization;
 
     if (!authorization) {
-      throw new Error('Unauthorized');
+      return next.handle().pipe();
     }
 
     const token = authorization.split(' ')[1];
+
+    console.log('Token: ', token);
 
     if (token) {
       try {
@@ -43,6 +45,7 @@ export class JwtDecoderInterceptor implements NestInterceptor {
             token,
             process.env.AUTHORIZATION_SECRET,
             (err, decoded) => {
+              console.log(err, decoded);
               if (err) {
                 return reject(err);
               }
@@ -60,7 +63,9 @@ export class JwtDecoderInterceptor implements NestInterceptor {
             request.user = user.dataValues; // Store user in the request
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        return next.handle().pipe();
+      }
     }
 
     return next.handle().pipe();

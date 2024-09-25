@@ -106,7 +106,11 @@ export default async function SingleProductPage(props: {
               isInCart={product?.isInCart}
             />
 
-            <WishListButton productId={productId} buttonClassName="h-fit p-5" />
+            <WishListButton
+              productId={productId}
+              buttonClassName="h-fit p-5"
+              isWishList={product?.isInWishlist}
+            />
           </div>
         </div>
       </div>

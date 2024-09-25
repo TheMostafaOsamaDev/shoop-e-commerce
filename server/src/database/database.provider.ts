@@ -3,6 +3,7 @@ import { Admin } from 'src/auth/entities/admin.entity';
 import { User } from 'src/auth/entities/user.entity';
 import { Product } from 'src/dashboard/product/entities/product.entity';
 import { Cart } from 'src/shop/entities/cart.entity';
+import { Wishlist } from 'src/shop/entities/wishlist.entity';
 import { ProductImage } from 'src/uploader/entities/product-image.entity';
 
 export const SEQUELIZE_CONNECTION = 'SEQUELIZE_CONNECTION';
@@ -29,7 +30,7 @@ export const DatabaseProvider = {
       },
     });
 
-    sequelize.addModels([User, Admin, Product, ProductImage, Cart]);
+    sequelize.addModels([User, Admin, Product, ProductImage, Cart, Wishlist]);
 
     await sequelize.sync();
     return sequelize;

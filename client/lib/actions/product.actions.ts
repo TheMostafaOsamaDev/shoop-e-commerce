@@ -13,6 +13,7 @@ import {
 } from "../queries/product.query";
 import { categoryFormatter } from "../utils";
 import { auth } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export const createMultipleProducts = async (products: any) => {
   const token = await checkAuthorizationAdmin();
@@ -31,6 +32,7 @@ export const createMultipleProducts = async (products: any) => {
 
 export const getFeaturedProducts = async (variables: GetProductsVariables) => {
   const { category, subCategory } = variables;
+  const token = await getAuthorizationToken();
 
   return await getClient()?.query({
     query: GET_FEATURED_PRODUCTS,
@@ -39,6 +41,11 @@ export const getFeaturedProducts = async (variables: GetProductsVariables) => {
         ...variables,
         category: categoryFormatter(category),
         subCategory: categoryFormatter(subCategory),
+      },
+    },
+    context: {
+      headers: {
+        authorization: token ? `${token}` : "",
       },
     },
   });
@@ -122,32 +129,38 @@ export const toggleWishList = async (formData: FormData) => {
     return redirect("/auth/log-in");
   }
 
-  const res = await getClient()?.mutate({
-    mutation: TOGGLE_WISHLIST,
-    variables: {
-      productId,
-    },
-    context: {
-      headers: {
-        authorization: token ? `${token}` : "",
+  try {
+    await getClient()?.mutate({
+      mutation: TOGGLE_WISHLIST,
+      variables: {
+        productId,
       },
-    },
-    update: (cache, { data }) => {
-      const toggleWishlist = data?.toggleWishlist;
-      const resData = toggleWishlist?.data;
-
-      if (!resData) return;
-
-      const productId = +resData;
-
-      const singleProduct = cache.readQuery<{ getSingleProduct: Product }>({
-        query: GET_SINGLE_PRODUCT,
-        variables: {
-          getSingleProductId: productId,
+      context: {
+        headers: {
+          authorization: token ? `${token}` : "",
         },
-      });
+      },
+      update: (cache, { data }) => {
+        const toggleWishlist = data?.toggleWishlist;
+        const resData = toggleWishlist?.data;
 
-      console.log(singleProduct);
-    },
-  });
+        if (!resData) return;
+
+        const productId = +resData;
+
+        const singleProduct = cache.readQuery<{ getSingleProduct: Product }>({
+          query: GET_SINGLE_PRODUCT,
+          variables: {
+            getSingleProductId: productId,
+          },
+        });
+
+        console.log(singleProduct);
+      },
+    });
+
+    revalidatePath(`/product/${productId}`);
+    revalidatePath("/wishlist");
+    revalidatePath("/");
+  } catch (error) {}
 };
