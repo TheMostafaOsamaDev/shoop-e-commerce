@@ -7,6 +7,7 @@ import { JwtDecoderInterceptor } from 'src/interceptors/jwt-decoder.interceptors
 import { UserGuard } from 'src/guards/user.guard';
 import { Product } from 'src/dashboard/product/models/product.model';
 import { SendMessage } from 'src/models/send-message.model';
+import { CartModel } from './models/cart.model';
 
 @Resolver(() => GetHomeProductsInput)
 export class ProductResolver {
@@ -48,5 +49,11 @@ export class ProductResolver {
     @Context() context: any,
   ) {
     return this.productService.toggleWishlist(productId, context?.req);
+  }
+
+  @Query(() => [CartModel], { name: 'getCart' })
+  @UseGuards(UserGuard)
+  getCart(@Context() context: any) {
+    return this.productService.getCart(context?.req);
   }
 }

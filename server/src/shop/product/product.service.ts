@@ -11,14 +11,13 @@ import { WISHLIST_REPOSITORY } from '../entities/wishlist.provider';
 import { SendMessage } from 'src/models/send-message.model';
 import { Wishlist } from '../entities/wishlist.entity';
 import { Sequelize } from 'sequelize-typescript';
-import { AnyFunction } from 'sequelize/types/utils';
 
 @Injectable()
 export class ProductService {
   constructor(
     @Inject(PRODUCT_REPOSITORY) private productRepository: typeof Product,
     @Inject(CART_REPOSITORY) private cartRepository: typeof Cart,
-    @Inject(WISHLIST_REPOSITORY) private wishlistRepository: typeof Cart,
+    @Inject(WISHLIST_REPOSITORY) private wishlistRepository: typeof Wishlist,
   ) {}
 
   async getFeaturedProducts(
@@ -199,5 +198,40 @@ export class ProductService {
       where: 'toggleWishlist',
       data: product.id.toString(),
     };
+  }
+
+  async getCart(req: Request) {
+    const userId = req.user.id;
+
+    const cart = await this.cartRepository.findAll({
+      where: {
+        userId,
+      },
+      include: [
+        {
+          model: Product,
+          include: [
+            {
+              model: ProductImage,
+              as: 'images',
+              attributes: ['url'],
+            },
+          ],
+        },
+      ],
+    });
+
+    const transformedCart = cart.map((c) => {
+      const product = {
+        ...c.product.toJSON(),
+        images: c.product.images.map((i) => i.url),
+      };
+      return {
+        ...c.toJSON(),
+        product,
+      };
+    });
+
+    return transformedCart;
   }
 }

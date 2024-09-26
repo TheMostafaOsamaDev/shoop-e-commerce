@@ -1,4 +1,4 @@
-import { Table, Column, ForeignKey } from 'sequelize-typescript';
+import { Table, Column, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Model } from 'sequelize-typescript';
 import { DataTypes } from 'sequelize';
 import { Product } from 'src/dashboard/product/entities/product.entity';
@@ -16,4 +16,7 @@ export class Cart extends Model {
   @Column({ type: DataTypes.CHAR(36), allowNull: false })
   @ForeignKey(() => User)
   userId: string;
+
+  @BelongsTo(() => Product)
+  product: Product;
 }
