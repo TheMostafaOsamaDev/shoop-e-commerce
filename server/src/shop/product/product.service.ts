@@ -59,7 +59,6 @@ export class ProductService {
         where: { userId },
         attributes: [],
       });
-      // TODO: Fix its order given it to you
       attributes.include.push([
         Sequelize.literal(`(
           SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
@@ -78,7 +77,7 @@ export class ProductService {
       attributes,
     });
 
-    return featured.map((f) => f.dataValues);
+    return featured.map((f) => f.dataValues).sort((a, b) => a.id - b.id);
   }
 
   async getSingleProduct(id: string, req: Request) {
