@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/components/providers/auth-provider";
 import ToastMessageProvider from "@/components/providers/toast-message-provider";
 import ApolloWrapperProvider from "@/components/providers/apollo-wrapper-provider";
+import Footer from "@/components/Footer";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -43,6 +44,8 @@ export default function RootLayout({
             <Toaster />
           </ThemeProvider>
         </AuthProvider>
+
+        <Footer />
       </body>
     </html>
   );
