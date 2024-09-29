@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
-import { logIn } from "@/lib/actions/auth.actions";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ToastAction } from "@radix-ui/react-toast";
 import { ApiError } from "@/lib/api-error";
@@ -21,8 +20,9 @@ import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { AdminForm } from "./AdminForm";
-import { getClient } from "@/lib/apollo-client";
 import { LOGIN_AUTH } from "@/lib/queries/auth.query";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { apolloClient, query } from "@/lib/apollo-client";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -35,6 +35,7 @@ export function LogInForm() {
   const { toast } = useToast();
   const params = useSearchParams();
   const returnUrl = params.get("returnUrl");
+  const [logIn] = useLazyQuery(LOGIN_AUTH);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -49,18 +50,25 @@ export function LogInForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-
-      const data = await getClient().query({
-        query: LOGIN_AUTH,
+      const res = await logIn({
         variables: {
           logInAuthInput: values,
         },
       });
 
-      if (data?.data?.logIn) await logIn(data.data.logIn);
-      else throw new Error("Invalid credentials");
+      console.log(res);
 
-      router.push(returnUrl || "/");
+      // const data = await getClient().query({
+      //   query: LOGIN_AUTH,
+      //   variables: {
+      //     logInAuthInput: values,
+      //   },
+      // });
+
+      // if (data?.data?.logIn) await logIn(data.data.logIn);
+      // else throw new Error("Invalid credentials");
+
+      // router.push(returnUrl || "/");
     } catch (error) {
       let err: any = ApiError.generate(error);
 
@@ -76,8 +84,8 @@ export function LogInForm() {
       }
 
       toast(err);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   return (

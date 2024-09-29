@@ -1,6 +1,7 @@
 // Auth routes
 export const auth_routes = ["/auth/log-in", "/auth/sign-up"];
 
+export const protected_routes = ["/cart"];
 // Dashboard routes
 import {
   Bolt,

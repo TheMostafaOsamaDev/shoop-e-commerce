@@ -18,7 +18,7 @@ export default function Home() {
 
       {/* Out Products */}
 
-      <OurProducts />
+      {/* <OurProducts /> */}
     </div>
   );
 }

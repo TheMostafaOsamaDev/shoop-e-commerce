@@ -2,6 +2,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { useToast } from "../ui/use-toast";
+import { Toaster } from "../ui/toaster";
 
 export default function ToastMessageProvider({
   children,
@@ -20,5 +21,10 @@ export default function ToastMessageProvider({
     }
   }, [messageParam, messageTypeParam]);
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <Toaster />
+    </>
+  );
 }

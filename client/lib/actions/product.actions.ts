@@ -1,5 +1,7 @@
 "use server";
+
 import { redirect } from "next/navigation";
+import { query } from "../apollo-client";
 import { getClient } from "../apollo-client";
 import {
   CREATE_MULTIPLE_PRODUCTS,
@@ -8,6 +10,7 @@ import {
 } from "../mutations/product.mutations";
 import { checkAuthorizationAdmin, getAuthorizationToken } from "./auth.actions";
 import {
+  GET_CART,
   GET_FEATURED_PRODUCTS,
   GET_SINGLE_PRODUCT,
 } from "../queries/product.query";
@@ -34,7 +37,7 @@ export const getFeaturedProducts = async (variables: GetProductsVariables) => {
   const { category, subCategory } = variables;
   const token = await getAuthorizationToken();
 
-  return await getClient()?.query({
+  return await query({
     query: GET_FEATURED_PRODUCTS,
     variables: {
       getHomeProductsInput: {
@@ -118,6 +121,20 @@ export const addToCart = async (formData: FormData) => {
   });
 
   return redirect("/cart");
+};
+export const getCart = async () => {
+  const token = await getAuthorizationToken();
+
+  const response = await getClient()?.query({
+    query: GET_CART,
+    context: {
+      headers: {
+        authorization: token ? `${token}` : "",
+      },
+    },
+  });
+
+  return response;
 };
 
 export const toggleWishList = async (formData: FormData) => {

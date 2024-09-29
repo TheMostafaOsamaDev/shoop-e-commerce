@@ -1,3 +1,4 @@
+//src/lib/apollo-wrapper.ts
 "use client";
 
 import { ApolloLink, HttpLink } from "@apollo/client";
@@ -7,7 +8,6 @@ import {
   NextSSRInMemoryCache,
   SSRMultipartLink,
 } from "@apollo/experimental-nextjs-app-support/ssr";
-import { ReactNode } from "react";
 
 function makeClient() {
   const httpLink = new HttpLink({
@@ -28,11 +28,7 @@ function makeClient() {
   });
 }
 
-export default function ApolloWrapperProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function ApolloWrapper({ children }: React.PropsWithChildren) {
   return (
     <ApolloNextAppProvider makeClient={makeClient}>
       {children}

@@ -7,6 +7,9 @@ export const metadata: Metadata = {
     "See what you have in your cart, and checkout to enjoy your new items.",
 };
 
-export default function CartPage() {
-  return <div>page</div>;
+export default async function CartPage() {
+  try {
+  } catch (error) {}
+
+  return <div className="min-h-screen container">page</div>;
 }

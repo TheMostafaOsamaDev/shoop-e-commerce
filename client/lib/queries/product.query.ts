@@ -39,3 +39,25 @@ export const GET_SINGLE_PRODUCT = gql`
     }
   }
 `;
+
+export const GET_CART = gql`
+  query GetCart {
+    getCart {
+      id
+      productId
+      userId
+      createdAt
+      updatedAt
+      quantity
+      product {
+        id
+        title
+        price
+        quantity
+        category
+        subCategory
+        images
+      }
+    }
+  }
+`;
