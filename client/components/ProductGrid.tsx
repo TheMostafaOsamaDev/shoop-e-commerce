@@ -1,23 +1,24 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+"use client";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { getAssetsUrl, sliceText } from "@/lib/utils";
 import Image from "next/image";
 import WishListButton from "./WishListButton";
 import Link from "next/link";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getFeaturedProducts } from "@/lib/actions/product.actions";
+import { getFeaturedProductsQuery } from "@/api/products/products.query";
 
-export default function ProductGrid({
-  products,
-  isAdmin,
-}: {
+export default function ProductGrid(props: {
   products: Product[];
   isAdmin: boolean;
 }) {
+  const {
+    data: { data: products },
+  } = useSuspenseQuery(getFeaturedProductsQuery);
+  console.log(products);
+
+  const { isAdmin } = props;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {products.map((p) => {

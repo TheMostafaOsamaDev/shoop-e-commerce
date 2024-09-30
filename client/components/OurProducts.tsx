@@ -5,6 +5,11 @@ import ProductGrid from "./ProductGrid";
 import { getFeaturedProducts } from "@/lib/actions/product.actions";
 import MessageAlert from "./MessageAlert";
 import { auth } from "@/auth";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
 export default async function OurProducts() {
   // Get the user session
@@ -15,23 +20,33 @@ export default async function OurProducts() {
     isAdmin = session?.user?.role === "admin";
   }
 
+  const queryClient = new QueryClient();
+
+  void queryClient.prefetchQuery({
+    queryKey: ["getFeaturedProducts"],
+    queryFn: async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`
+      );
+
+      return res.json();
+    },
+  });
+
   // Get the featured products
   let content;
 
   try {
-    const res = await getFeaturedProducts({
-      limit: 12,
-      offset: 0,
-      category: "",
-      subCategory: "",
-    });
-
-    const data: Product[] = res?.data?.getFeaturedProducts;
+    const data: Product[] = [];
 
     if (data?.length === 0)
       content = <MessageAlert title="" description="No product where found" />;
 
-    content = <ProductGrid products={data} isAdmin={isAdmin} />;
+    content = (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <ProductGrid products={data} isAdmin={isAdmin} />
+      </HydrationBoundary>
+    );
   } catch (error) {
     // Log the error
     ApiError.log(error);

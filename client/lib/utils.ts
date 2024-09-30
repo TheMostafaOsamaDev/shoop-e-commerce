@@ -29,3 +29,17 @@ export const getAssetsUrl = (
 // Formatter category && subCategory
 export const categoryFormatter = (value: any) =>
   value.replaceAll("'", "`").replaceAll(" ", "_").toUpperCase();
+
+// params will be of type { [key: string]: string | number | boolean }
+export const getQueryParams = (params: {
+  [key: string]: string | number | boolean | undefined;
+}) => {
+  let query = "?";
+
+  for (const key in params) {
+    if (params[key] === undefined) continue;
+    query += `${key}=${params[key]}&`;
+  }
+
+  return query;
+};
