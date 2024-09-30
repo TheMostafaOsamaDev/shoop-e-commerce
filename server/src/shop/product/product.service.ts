@@ -21,13 +21,12 @@ export class ProductService {
   ) {}
 
   async getFeaturedProducts(
-    getHomeProductsInput: GetHomeProductsInput,
     req: Request,
+    limit: number = 10,
+    offset: number = 0,
+    category: string = '',
+    subCategory: string = '',
   ) {
-    const limit = getHomeProductsInput.limit || 10;
-    const offset = getHomeProductsInput.offset || 0;
-    const category = getHomeProductsInput.category || '';
-    const subCategory = getHomeProductsInput.subCategory || '';
     const userId = req?.user?.id;
     let where = {};
 

@@ -13,17 +13,17 @@ import { CartModel } from './models/cart.model';
 export class ProductResolver {
   constructor(private readonly productService: ProductService) {}
 
-  @Query(() => [SingleHomeProduct], { name: 'getFeaturedProducts' })
-  @UseInterceptors(JwtDecoderInterceptor)
-  getFeaturedProducts(
-    @Args('GetHomeProductsInput') getHomeProductsInput: GetHomeProductsInput,
-    @Context() context: any,
-  ) {
-    return this.productService.getFeaturedProducts(
-      getHomeProductsInput,
-      context?.req,
-    );
-  }
+  // @Query(() => [SingleHomeProduct], { name: 'getFeaturedProducts' })
+  // @UseInterceptors(JwtDecoderInterceptor)
+  // getFeaturedProducts(
+  //   @Args('GetHomeProductsInput') getHomeProductsInput: GetHomeProductsInput,
+  //   @Context() context: any,
+  // ) {
+  //   return this.productService.getFeaturedProducts(
+  //     getHomeProductsInput,
+  //     context?.req,
+  //   );
+  // }
 
   @Query(() => SingleHomeProduct, { name: 'getSingleProduct' })
   @UseInterceptors(JwtDecoderInterceptor)

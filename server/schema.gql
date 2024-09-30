@@ -83,7 +83,6 @@ scalar DateTime
 type Query {
   logIn(logInAuthInput: LoginAuthInput!): AuthModel!
   adminAuth(adminAuthInput: AdminAuthInput!): AdminModel!
-  getFeaturedProducts(GetHomeProductsInput: GetHomeProductsInput!): [SingleHomeProduct!]!
   getSingleProduct(id: String!): SingleHomeProduct!
   getCart: [CartModel!]!
 }
@@ -102,13 +101,6 @@ input AdminAuthInput {
 
   """Passkey of admin"""
   passkey: String!
-}
-
-input GetHomeProductsInput {
-  limit: Int!
-  offset: Int!
-  category: String!
-  subCategory: String!
 }
 
 type Mutation {

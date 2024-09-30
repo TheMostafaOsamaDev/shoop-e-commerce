@@ -17,6 +17,7 @@ declare module 'express' {
 }
 
 import { ExecutionContext } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 // Property 'req' does not exist on type 'ExecutionContext'.
 declare module 'context' {
   export interface ExecutionContext {
