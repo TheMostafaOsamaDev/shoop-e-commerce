@@ -1,6 +1,6 @@
 import { baseApi } from "@/lib/baseApi";
 import { getQueryParams } from "@/lib/utils";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { sign } from "crypto";
 
 export const getProducts = async ({
@@ -16,17 +16,15 @@ export const getProducts = async ({
   category?: string;
   subCategory?: string;
 }) => {
-  // const queryParams = getQueryParams({ limit, offset, category, subCategory });
+  const CancelToken = axios.CancelToken;
 
-  // const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
 
-  // const source = CancelToken.source();
+  const promise: AxiosResponse<Product[]> = await baseApi.get(`/products`, {});
 
-  const promise = await baseApi.get(`/products`);
-
-  // signal?.addEventListener("abort", () => {
-  //   source.cancel();
-  // });
+  signal?.addEventListener("abort", () => {
+    source.cancel();
+  });
 
   return promise;
 };
@@ -38,10 +36,10 @@ export const getFeaturedProductsQuery = {
     queryKey,
   }: {
     signal: AbortSignal;
-    queryKey: any[];
+    queryKey: any;
   }) => {
-    const [, { limit, offset, category, subCategory }] = queryKey;
+    console.log(queryKey);
 
-    return getProducts({ signal, limit, offset, category, subCategory });
+    return getProducts({ signal, limit: 12 });
   },
 };

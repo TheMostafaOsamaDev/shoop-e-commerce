@@ -15,7 +15,6 @@ export default function ProductGrid(props: {
   const {
     data: { data: products },
   } = useSuspenseQuery(getFeaturedProductsQuery);
-  console.log(products);
 
   const { isAdmin } = props;
 

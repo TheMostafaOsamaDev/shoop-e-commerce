@@ -1,4 +1,11 @@
-import { Controller, Get, Query, Req } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import {
@@ -19,8 +26,8 @@ export class ProductController {
   @ApiResponseDecorators(getProductsApiResponse)
   getProducts(
     @Req() req: Request,
-    @Query('limit') limit?: number,
-    @Query('offset') offset?: number,
+    @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit?: number,
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset?: number,
     @Query('category') category?: string,
     @Query('subCategory') subCategory?: string,
   ) {

@@ -2,7 +2,6 @@ import React from "react";
 import SectionHeader from "./SectionHeader";
 import { ApiError } from "@/lib/api-error";
 import ProductGrid from "./ProductGrid";
-import { getFeaturedProducts } from "@/lib/actions/product.actions";
 import MessageAlert from "./MessageAlert";
 import { auth } from "@/auth";
 import {
@@ -10,6 +9,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { getFeaturedProductsQuery } from "@/api/products/products.query";
 
 export default async function OurProducts() {
   // Get the user session
@@ -22,16 +22,7 @@ export default async function OurProducts() {
 
   const queryClient = new QueryClient();
 
-  void queryClient.prefetchQuery({
-    queryKey: ["getFeaturedProducts"],
-    queryFn: async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`
-      );
-
-      return res.json();
-    },
-  });
+  void queryClient.prefetchQuery(getFeaturedProductsQuery);
 
   // Get the featured products
   let content;
