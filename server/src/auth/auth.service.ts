@@ -9,6 +9,7 @@ import { LoginAuthInput } from './input/login-auth.input';
 import { AdminAuthInput } from './input/admin-auth.input';
 import { ADMIN_REPOSITORY } from './entities/admin.provider';
 import { Admin } from './entities/admin.entity';
+import { LogInAuthDto } from './dto/login-auth-dto';
 
 @Injectable()
 export class AuthService {
@@ -41,9 +42,9 @@ export class AuthService {
     };
   }
 
-  async logIn(logInAuthInput: LoginAuthInput) {
+  async logIn(logInAuthDto: LogInAuthDto) {
     const user = await this.userRepository.findOne({
-      where: { email: logInAuthInput.email },
+      where: { email: logInAuthDto.email },
     });
 
     if (!user) {
@@ -51,7 +52,7 @@ export class AuthService {
     }
 
     const isPasswordValid = await bcrypt.compare(
-      logInAuthInput.password,
+      logInAuthDto.password,
       user.password,
     );
 

@@ -15,10 +15,10 @@ export class AuthResolver {
     return this.authService.createUser(createAuthInput);
   }
 
-  @Query(() => AuthModel)
-  async logIn(@Args('logInAuthInput') logInAuthInput: LoginAuthInput) {
-    return this.authService.logIn(logInAuthInput);
-  }
+  // @Query(() => AuthModel)
+  // async logIn(@Args('logInAuthInput') logInAuthInput: LoginAuthInput) {
+  //   return this.authService.logIn(logInAuthInput);
+  // }
 
   @Query(() => AdminModel)
   async adminAuth(@Args('adminAuthInput') adminAuthInput: AdminAuthInput) {
