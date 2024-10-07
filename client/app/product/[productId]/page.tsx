@@ -11,6 +11,17 @@ import SimilarProducts from "@/components/SimilarProducts";
 import { Separator } from "@/components/ui/separator";
 import SectionHeader from "@/components/SectionHeader";
 import WishListButton from "@/components/WishListButton";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import {
+  getSingleProductQueryFn,
+  getSingleProductQueryKey,
+} from "@/api/products/products.query";
+import MessageAlert from "@/components/MessageAlert";
+import SingleProduct from "@/components/SingleProduct";
 
 export default async function SingleProductPage(props: {
   params: {
@@ -28,30 +39,33 @@ export default async function SingleProductPage(props: {
   if (parsedUrl) pathname = parsedUrl.pathname;
 
   let product: Product | null = null;
+  let content;
+
+  const queryClient = new QueryClient();
 
   try {
-    const data = await getSingleProduct(productId);
-    product = data?.data?.getSingleProduct;
-
-    if (!product) {
-      throw ApiError.makeError("Product not found", 404);
-    }
+    void queryClient.prefetchQuery({
+      queryKey: getSingleProductQueryKey(productId),
+      queryFn: async ({ signal }) =>
+        getSingleProductQueryFn({ signal, productId }),
+    });
   } catch (error) {
-    const err = ApiError.generate(error);
-
-    return notFound();
+    content = <MessageAlert title="" description="Error fetching product" />;
   }
 
-  const imageParam = Number(searchParams?.image) || 1;
-  const productImages = product?.images || [];
-  const currentImage = productImages?.[imageParam - 1];
-  const url = currentImage?.url || "";
-  const isExternal = currentImage?.isExternal || false;
-  const route = isExternal ? "" : "products";
+  // const imageParam = Number(searchParams?.image) || 1;
+  // const productImages = product?.images || [];
+  // const currentImage = productImages?.[imageParam - 1];
+  // const url = currentImage?.url || "";
+  // const isExternal = currentImage?.isExternal || false;
+  // const route = isExternal ? "" : "products";
 
   return (
     <div className="sub-container min-h-[calc(100vh-var(--header-height)-25px)]">
-      <div className="flex items-center gap-10">
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <SingleProduct />
+      </HydrationBoundary>
+      {/* <div className="flex items-center gap-10">
         <div className="space-y-3">
           <div className="w-[630px] h-[400px] overflow-hidden">
             <Image
@@ -113,17 +127,17 @@ export default async function SingleProductPage(props: {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <SectionHeader separatorClasses="my-8">
         <h2>Similar Products</h2>
         <p>You might also like these products based on your recent activity.</p>
       </SectionHeader>
 
-      <SimilarProducts
+      {/* <SimilarProducts
         category={product?.category}
         subCategory={product?.subCategory}
-      />
+      /> */}
     </div>
   );
 }

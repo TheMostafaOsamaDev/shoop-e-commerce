@@ -14,31 +14,33 @@ import { getFeaturedProductsQuery } from "@/api/products/products.query";
 export default async function OurProducts() {
   // Get the user session
   const session = await auth();
-  let isAdmin = false;
+  let content,
+    isAdmin = false;
+  const queryClient = new QueryClient();
 
   if (session?.user) {
     isAdmin = session?.user?.role === "admin";
   }
 
-  const queryClient = new QueryClient();
-
-  void queryClient.prefetchQuery(getFeaturedProductsQuery);
-
-  // Get the featured products
-  let content;
+  try {
+    void queryClient.prefetchQuery(getFeaturedProductsQuery);
+  } catch (error) {
+    content = (
+      <MessageAlert
+        description={ApiError.generate(error).description || ""}
+        title="Error ocurred"
+      />
+    );
+  }
 
   try {
-    const data: Product[] = [];
-
-    if (data?.length === 0)
-      content = <MessageAlert title="" description="No product where found" />;
-
     content = (
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductGrid products={data} isAdmin={isAdmin} />
+        <ProductGrid isAdmin={isAdmin} />
       </HydrationBoundary>
     );
   } catch (error) {
+    console.log(error);
     // Log the error
     ApiError.log(error);
 

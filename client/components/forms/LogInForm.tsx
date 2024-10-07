@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "../SubmitButton";
-import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ToastAction } from "@radix-ui/react-toast";
 import { ApiError } from "@/lib/api-error";
@@ -20,9 +19,9 @@ import { useToast } from "../ui/use-toast";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { AdminForm } from "./AdminForm";
-import { LOGIN_AUTH } from "@/lib/queries/auth.query";
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { apolloClient, query } from "@/lib/apollo-client";
+import { useMutation } from "@tanstack/react-query";
+import { logInMutationFn } from "@/api/auth/auth.mutations";
+import { logIn } from "@/lib/actions/auth.actions";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -30,47 +29,20 @@ const formSchema = z.object({
 });
 
 export function LogInForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const { toast } = useToast();
-  const params = useSearchParams();
-  const returnUrl = params.get("returnUrl");
-  const [logIn] = useLazyQuery(LOGIN_AUTH);
+  const logInMutation = useMutation({
+    mutationFn: logInMutationFn,
+    onSuccess: async (data) => {
+      const logInData = data?.data;
 
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
+      if (logInData) {
+        await logIn(logInData);
+        router.push(returnUrl || "/");
+      }
     },
-  });
-
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setIsLoading(true);
-      const res = await logIn({
-        variables: {
-          logInAuthInput: values,
-        },
-      });
-
-      console.log(res);
-
-      // const data = await getClient().query({
-      //   query: LOGIN_AUTH,
-      //   variables: {
-      //     logInAuthInput: values,
-      //   },
-      // });
-
-      // if (data?.data?.logIn) await logIn(data.data.logIn);
-      // else throw new Error("Invalid credentials");
-
-      // router.push(returnUrl || "/");
-    } catch (error) {
+    onError: (error) => {
       let err: any = ApiError.generate(error);
+
+      console.log(error);
 
       if (err.status === 404) {
         err.action = (
@@ -84,8 +56,25 @@ export function LogInForm() {
       }
 
       toast(err);
-    }
-    setIsLoading(false);
+    },
+  });
+  const router = useRouter();
+  const { toast } = useToast();
+  const params = useSearchParams();
+  const returnUrl = params.get("returnUrl");
+
+  // 1. Define your form.
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  // 2. Define a submit handler.
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    logInMutation.mutate(values);
   }
 
   return (
@@ -122,7 +111,7 @@ export function LogInForm() {
           )}
         />
 
-        <SubmitButton isLoading={isLoading} text="Log in" />
+        <SubmitButton isLoading={logInMutation.isPending} text="Log in" />
 
         <div className="flex items-center justify-between xl:hidden">
           <Button asChild type="button" variant={"ghost"}>

@@ -5,13 +5,9 @@ import Image from "next/image";
 import WishListButton from "./WishListButton";
 import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getFeaturedProducts } from "@/lib/actions/product.actions";
 import { getFeaturedProductsQuery } from "@/api/products/products.query";
 
-export default function ProductGrid(props: {
-  products: Product[];
-  isAdmin: boolean;
-}) {
+export default function ProductGrid(props: { isAdmin: boolean }) {
   const {
     data: { data: products },
   } = useSuspenseQuery(getFeaturedProductsQuery);

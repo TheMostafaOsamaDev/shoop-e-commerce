@@ -2,18 +2,25 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
+  Param,
   ParseIntPipe,
   Query,
   Req,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import {
   ApiQueryDecorators,
   ApiResponseDecorators,
 } from 'src/decorators/swagger.decorators';
-import { getProductsApiQuery } from './swagger/swagger.query';
-import { getProductsApiResponse } from './swagger/swagger.response';
+import {
+  getProductsApiQuery,
+  getSingleProductApiQuery,
+} from './swagger/swagger.query';
+import {
+  getProductsApiResponse,
+  getSingleProductApiResponse,
+} from './swagger/swagger.response';
 import { Request } from 'express';
 
 @ApiTags('Product')
@@ -39,5 +46,19 @@ export class ProductController {
       category, // categoryParam
       subCategory, // subCategoryParam
     );
+  }
+
+  @Get(':id')
+  @ApiResponseDecorators(getSingleProductApiResponse)
+  @ApiParam({
+    name: 'id',
+    type: String,
+    description: 'The id of the product',
+    example: '1',
+  })
+  getProduct(@Req() req: Request, @Param('id') id: string) {
+    console.log({ id });
+
+    return this.productService.getSingleProduct(id, req);
   }
 }

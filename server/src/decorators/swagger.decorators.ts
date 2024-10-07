@@ -10,7 +10,6 @@ export function ApiQueryDecorators(apiQueries: ApiQueryOptions[]) {
   return applyDecorators(...apiQueries.map((apiQuery) => ApiQuery(apiQuery)));
 }
 
-// export const ApiResponseDecorators
 export function ApiResponseDecorators(apiResponses: ApiResponseOptions[]) {
   const allResponses: ApiResponseOptions[] = [
     {

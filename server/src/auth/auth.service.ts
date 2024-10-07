@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateAuthInput } from './input/create-auth.input';
 import { User } from './entities/user.entity';
 import { USER_REPOSITORY } from './entities/user.provider';
@@ -43,12 +48,14 @@ export class AuthService {
   }
 
   async logIn(logInAuthDto: LogInAuthDto) {
+    console.log(logInAuthDto);
+
     const user = await this.userRepository.findOne({
       where: { email: logInAuthDto.email },
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundException('User not found');
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -57,7 +64,7 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      throw new Error('Invalid password');
+      throw new BadRequestException('Invalid password');
     }
 
     return {
