@@ -20,14 +20,15 @@ export class JwtDecoderInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Promise<Observable<any>> {
-    // Check if it's a GraphQL request
-    const ctx = GqlExecutionContext.create(context);
-    const gqlRequest = ctx.getContext().req;
-
     // If not GraphQL, fall back to HTTP
-    const request = gqlRequest || context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest();
+
     const authorization =
-      request.headers['authorization'] || request.authorization;
+      request.headers['authorization'] ||
+      request.authorization ||
+      request.Authorization;
+
+    console.log(authorization);
 
     if (!authorization) {
       return next.handle().pipe();

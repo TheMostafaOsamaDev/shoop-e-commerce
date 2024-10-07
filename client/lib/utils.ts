@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { ApiError } from "./api-error";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -42,4 +43,15 @@ export const getQueryParams = (params: {
   }
 
   return query;
+};
+
+// Handling 401 error
+export const handleUnauthorizedError = (error: any, router: any) => {
+  const formattedError = ApiError.generate(error);
+
+  if (formattedError.status === 401) {
+    return router.push("/auth/log-in");
+  }
+
+  return false;
 };

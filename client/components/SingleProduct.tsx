@@ -5,25 +5,31 @@ import {
   getSingleProductQueryKey,
 } from "@/api/products/products.query";
 import { getAssetsUrl } from "@/lib/utils";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { notFound, useParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "./ui/separator";
 import CartButton from "./CartButton";
 import WishListButton from "./WishListButton";
+import { AxiosResponse } from "axios";
 
 export default function SingleProduct() {
   const params = useParams();
   const pathname = usePathname();
-  // params.productId can be string or string[] make it if an array to string
   const productId = Array.isArray(params.productId)
     ? params.productId[0]
     : params.productId;
-  const { data, isLoading } = useSuspenseQuery({
+  const { data, isLoading, isFetching, isPending } = useSuspenseQuery({
     queryKey: getSingleProductQueryKey(productId),
     queryFn: async ({ signal }) =>
       getSingleProductQueryFn({ signal, productId }),
+  });
+
+  console.log({
+    isLoading,
+    isFetching,
+    isPending,
   });
 
   const product = data?.data;
@@ -98,11 +104,11 @@ export default function SingleProduct() {
               isInCart={product?.isInCart}
             />
 
-            {/* <WishListButton
+            <WishListButton
               productId={productId}
               buttonClassName="h-fit p-5"
               isWishList={product?.isInWishlist}
-            /> */}
+            />
           </div>
         </div>
       </div>

@@ -11,6 +11,12 @@ async function bootstrap() {
       'This is the API documentation for the Shoop! E-commerce application',
     )
     .setVersion('1.0')
+    .addCookieAuth('auth-cookie', {
+      type: 'apiKey',
+      name: 'authorization',
+      in: 'cookie',
+      description: 'Authorization cookie to access the protected routes',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

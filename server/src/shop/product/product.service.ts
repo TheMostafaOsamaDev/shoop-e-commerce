@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { GetHomeProductsInput } from './dto/get-home-products.input';
 import { PRODUCT_REPOSITORY } from 'src/dashboard/product/entities/product.provider';
 import { Product } from 'src/dashboard/product/entities/product.entity';
@@ -86,7 +86,6 @@ export class ProductService {
   }
 
   async getSingleProduct(id: string, req: Request) {
-    // @ts-ignore
     const user: User = req.user;
 
     const product = await this.productRepository.findOne({
@@ -132,15 +131,20 @@ export class ProductService {
   }
 
   async addToCart(productId: string, quantity: number, req: Request) {
-    // @ts-ignore
     const user: User = req.user;
-    let product: Product;
 
-    try {
-      const foundProduct = await this.productRepository.findByPk(productId);
-      product = foundProduct.toJSON();
-    } catch (error) {
-      throw new Error('Product not found');
+    const foundProduct = await this.productRepository.findByPk(productId);
+    const product: Product = foundProduct.toJSON();
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    if (product.quantity < quantity) {
+      Logger.error('Product quantity is less than requested quantity');
+      throw new NotFoundException(
+        'Product quantity is less than requested quantity',
+      );
     }
 
     let cart = await this.cartRepository.findOne({
@@ -161,7 +165,10 @@ export class ProductService {
       });
     }
 
-    return product;
+    return {
+      ...product,
+      isInCart: true,
+    };
   }
 
   async toggleWishlist(productId: string, req: Request): Promise<SendMessage> {

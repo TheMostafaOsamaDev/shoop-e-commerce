@@ -1,3 +1,4 @@
+import { getAuthorizationToken } from "@/lib/actions/auth.actions";
 import { baseApi } from "@/lib/baseApi";
 import { getQueryParams } from "@/lib/utils";
 import axios, { AxiosResponse } from "axios";
@@ -55,9 +56,15 @@ export const getSingleProduct = async ({
 
   const source = CancelToken.source();
 
+  const token = await getAuthorizationToken();
+
   const promise: AxiosResponse<Product> = await baseApi.get(
     `/products/${productId}`,
-    {}
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
   );
 
   signal?.addEventListener("abort", () => {

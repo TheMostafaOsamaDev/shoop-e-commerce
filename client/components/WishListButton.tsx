@@ -1,8 +1,8 @@
+"use client";
 import React from "react";
 import { Button } from "./ui/button";
 import { Heart } from "lucide-react";
 import clsx from "clsx";
-import { toggleWishList } from "@/lib/actions/product.actions";
 
 export default function WishListButton({
   productId,
@@ -17,8 +17,13 @@ export default function WishListButton({
   className?: string;
   buttonClassName?: string;
 }) {
+  const handleToggleWishList = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Add your logic here
+  };
+
   return (
-    <form className={clsx(className)} action={toggleWishList}>
+    <form className={clsx(className)}>
       <input type="hidden" defaultValue={productId} required name="productId" />
 
       <Button

@@ -3,6 +3,7 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import * as jwt from 'jsonwebtoken';
@@ -21,22 +22,24 @@ export class UserGuard implements CanActivate {
     // If not GraphQL, fall back to HTTP
     const request = gqlRequest || context.switchToHttp().getRequest();
     const authorization =
-      request.headers['authorization'] || request.authorization;
+      request.headers['authorization'] ||
+      request.authorization ||
+      request.Authorization;
 
     if (!authorization) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
 
     const token = authorization.split(' ')[1];
 
     if (!token) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
 
     const decoded: any = jwt.verify(token, process.env.AUTHORIZATION_SECRET);
 
     if (!decoded?.email) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
 
     const user = await this.userRepository.findOne({
@@ -44,7 +47,7 @@ export class UserGuard implements CanActivate {
     });
 
     if (!user) {
-      throw new Error('Unauthorized');
+      throw new UnauthorizedException('Unauthorized');
     }
 
     request.user = user.dataValues;
