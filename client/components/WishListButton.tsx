@@ -22,28 +22,34 @@ export default function WishListButton({
   buttonClassName?: string;
 }) {
   const queryClient = getQueryClient();
-
   const toggleWishListMutation = useMutation({
     mutationFn: () =>
       toggleWishlistMutationFn({ productId: productId.toString() }),
-    onMutate: () => {
-      const previousData = queryClient.getQueriesData({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
         queryKey: getSingleProductQueryKey(productId.toString()),
       });
-
-      // @ts-ignore
-      if (previousData?.[0]?.[1]?.data) {
-        // @ts-ignore
-        previousData[0][1].data.isWishList = !isWishList;
-
-        queryClient.setQueryData(
-          getSingleProductQueryKey(productId.toString()),
-          previousData
-        );
-
-        return { previousData };
-      }
     },
+    // onMutate: () => {
+
+    //   // Editing cache not working currently
+    //   const previousData = queryClient.getQueriesData({
+    //     queryKey: getSingleProductQueryKey(productId.toString()),
+    //   });
+
+    //   // @ts-ignore
+    //   if (previousData?.[0]?.[1]?.data) {
+    //     // @ts-ignore
+    //     previousData[0][1].data.isWishList = !isWishList;
+
+    //     queryClient.setQueryData(
+    //       getSingleProductQueryKey(productId.toString()),
+    //       previousData
+    //     );
+
+    //     return { previousData };
+    //   }
+    // },
   });
 
   const handleToggleWishList = async (e: React.FormEvent<HTMLFormElement>) => {

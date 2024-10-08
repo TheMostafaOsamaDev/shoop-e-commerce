@@ -207,4 +207,21 @@
   .loader {
     @apply size-14 animate-spin duration-700  rounded-full border-2 border-t-primary border-r-primary;
   }
+
+  /* Three dots loader */
+  .dots-loader {
+    @apply flex items-center gap-1;
+  }
+
+  .dots-loader span {
+    @apply bg-primary/80 size-[12px] rounded-full animate-pulse duration-1000;
+  }
+
+  .dots-loader span:nth-child(2) {
+    @apply delay-300;
+  }
+
+  .dots-loader span:nth-child(3) {
+    @apply delay-500;
+  }
 }

@@ -29,14 +29,6 @@ export default function SingleProduct() {
 
   const product = data?.data;
 
-  // if (!product) {
-  //   return notFound();
-  // }
-
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", product);
-
-  if (!product) return <p>Loading...</p>;
-
   const imageParam = Number(params.image) || 1;
   const productImages = product.images || [];
   const currentImage = productImages[imageParam - 1];

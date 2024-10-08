@@ -13,6 +13,8 @@ import { useToast } from "./ui/use-toast";
 import { ApiError } from "@/lib/api-error";
 import { getQueryClient } from "./providers/QueryClientProvider";
 import { getSingleProductQueryKey } from "@/api/products/products.query";
+import DotsLoader from "./DotsLoader";
+import clsx from "clsx";
 
 const buttonClasses =
   "btn-icon-container justify-between h-[60px] px-6 rounded-full block w-full";
@@ -66,11 +68,27 @@ export default function CartButton({
       </Button>
     );
   }
-  if (isInCart) {
+
+  if (addToCartMutation.isPending) {
     return (
       <Button asChild className={buttonClasses} variant={"outline"}>
+        <div>
+          <DotsLoader />
+          <span className="flex-1 text-lg text-center">Adding to cart...</span>
+        </div>
+      </Button>
+    );
+  }
+
+  if (isInCart) {
+    return (
+      <Button
+        asChild
+        className={clsx(buttonClasses, "hover:border-primary")}
+        variant={"outline"}
+      >
         <Link href={"/cart"}>
-          <BadgeCheck size={28} />
+          <BadgeCheck size={28} className="text-primary" />
           <span className="flex-1 text-lg text-center">Added. Go to Cart</span>
         </Link>
       </Button>
