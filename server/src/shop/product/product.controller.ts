@@ -77,4 +77,10 @@ export class ProductController {
   ) {
     return this.productService.addToCart(id, quantity, req);
   }
+
+  @Patch(':id/wishlist')
+  @UseGuards(UserGuard)
+  toggleWishlist(@Param('id') id: string, @Req() req: Request) {
+    return this.productService.toggleWishlist(id, req);
+  }
 }

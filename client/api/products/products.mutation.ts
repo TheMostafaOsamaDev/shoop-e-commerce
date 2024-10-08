@@ -24,3 +24,24 @@ export const addToCartMutationFn = async ({
 
   return promise;
 };
+
+
+export const toggleWishlistMutationFn = async ({
+  productId,
+}: {
+  productId: string;
+}) => {
+  const token = await getAuthorizationToken();
+
+  const promise: AxiosResponse<Product> = await baseApi.patch(
+    `/products/${productId}/wishlist`,
+    {},
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+
+  return promise;
+};

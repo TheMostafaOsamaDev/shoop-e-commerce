@@ -3,6 +3,10 @@ import React from "react";
 import { Button } from "./ui/button";
 import { Heart } from "lucide-react";
 import clsx from "clsx";
+import { useMutation } from "@tanstack/react-query";
+import { toggleWishlistMutationFn } from "@/api/products/products.mutation";
+import { getQueryClient } from "./providers/QueryClientProvider";
+import { getSingleProductQueryKey } from "@/api/products/products.query";
 
 export default function WishListButton({
   productId,
@@ -17,15 +21,39 @@ export default function WishListButton({
   className?: string;
   buttonClassName?: string;
 }) {
+  const queryClient = getQueryClient();
+
+  const toggleWishListMutation = useMutation({
+    mutationFn: () =>
+      toggleWishlistMutationFn({ productId: productId.toString() }),
+    onMutate: () => {
+      const previousData = queryClient.getQueriesData({
+        queryKey: getSingleProductQueryKey(productId.toString()),
+      });
+
+      // @ts-ignore
+      if (previousData?.[0]?.[1]?.data) {
+        // @ts-ignore
+        previousData[0][1].data.isWishList = !isWishList;
+
+        queryClient.setQueryData(
+          getSingleProductQueryKey(productId.toString()),
+          previousData
+        );
+
+        return { previousData };
+      }
+    },
+  });
+
   const handleToggleWishList = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Add your logic here
+
+    toggleWishListMutation.mutate();
   };
 
   return (
-    <form className={clsx(className)}>
-      <input type="hidden" defaultValue={productId} required name="productId" />
-
+    <form className={clsx(className)} onSubmit={handleToggleWishList}>
       <Button
         className={clsx(
           "h-fit p-3 rounded-full transition-colors",
@@ -37,7 +65,7 @@ export default function WishListButton({
           buttonClassName
         )}
         variant={"secondary"}
-        disabled={disabled}
+        disabled={disabled || toggleWishListMutation.isPending}
       >
         <Heart
           className={`${isWishList ? "fill-red-500 stroke-red-500" : ""}`}
