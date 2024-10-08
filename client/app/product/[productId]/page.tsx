@@ -10,7 +10,6 @@ import CartButton from "@/components/CartButton";
 import SimilarProducts from "@/components/SimilarProducts";
 import { Separator } from "@/components/ui/separator";
 import SectionHeader from "@/components/SectionHeader";
-import WishListButton from "@/components/WishListButton";
 import {
   dehydrate,
   HydrationBoundary,
@@ -43,7 +42,7 @@ export default async function SingleProductPage(props: {
 
   try {
     void queryClient.prefetchQuery({
-      queryKey: getSingleProductQueryKey(productId),
+      queryKey: getSingleProductQueryKey(productId), // ["getSingleProduct", { productId }]
       queryFn: async ({ signal }) =>
         getSingleProductQueryFn({ signal, productId }),
     });
@@ -61,11 +60,11 @@ export default async function SingleProductPage(props: {
         <h2>Similar Products</h2>
         <p>You might also like these products based on your recent activity.</p>
       </SectionHeader>
-
-      {/* <SimilarProducts
-        category={product?.category}
-        subCategory={product?.subCategory}
-      /> */}
     </div>
   );
 }
+
+// <SimilarProducts
+//   category={product?.category}
+//   subCategory={product?.subCategory}
+// />;

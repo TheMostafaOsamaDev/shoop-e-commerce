@@ -20,23 +20,22 @@ export default function SingleProduct() {
   const productId = Array.isArray(params.productId)
     ? params.productId[0]
     : params.productId;
+  // Here When Update the cahce
   const { data, isLoading, isFetching, isPending } = useSuspenseQuery({
     queryKey: getSingleProductQueryKey(productId),
     queryFn: async ({ signal }) =>
       getSingleProductQueryFn({ signal, productId }),
   });
 
-  console.log({
-    isLoading,
-    isFetching,
-    isPending,
-  });
-
   const product = data?.data;
 
-  if (!product) {
-    return notFound();
-  }
+  // if (!product) {
+  //   return notFound();
+  // }
+
+  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~", product);
+
+  if (!product) return <p>Loading...</p>;
 
   const imageParam = Number(params.image) || 1;
   const productImages = product.images || [];
@@ -44,8 +43,6 @@ export default function SingleProduct() {
   const url = currentImage.url || "";
   const isExternal = currentImage.isExternal || false;
   const route = isExternal ? "" : "products";
-
-  console.log(product);
 
   return (
     <>
