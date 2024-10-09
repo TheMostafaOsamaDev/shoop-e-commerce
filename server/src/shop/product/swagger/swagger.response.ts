@@ -6,6 +6,7 @@ export const getProductsApiResponse: ApiResponseOptions[] = [
   {
     status: 200,
     description: 'Get all products',
+    type: [ProductDto],
   },
   {
     status: 404,
@@ -23,5 +24,18 @@ export const getSingleProductApiResponse: ApiResponseOptions[] = [
   {
     status: 404,
     description: 'Product not found',
+  },
+];
+
+// Getting Cart
+export const getCartApiResponse: ApiResponseOptions[] = [
+  {
+    status: 200,
+    description: 'Get cart',
+    type: [ProductDto],
+  },
+  {
+    status: 404,
+    description: 'No products in cart',
   },
 ];

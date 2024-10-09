@@ -5,7 +5,7 @@ import {
 } from "@/api/products/products.query";
 import { getAssetsUrl } from "@/lib/utils";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "./ui/separator";
@@ -17,11 +17,11 @@ import { useSession } from "next-auth/react";
 
 export default function SingleProduct() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const productId = Array.isArray(params.productId)
     ? params.productId[0]
     : params.productId;
-  // Here When Update the cahce
   const { data, isLoading, isFetching, isPending } = useSuspenseQuery({
     queryKey: getSingleProductQueryKey(productId),
     queryFn: async ({ signal }) =>
@@ -31,7 +31,7 @@ export default function SingleProduct() {
 
   const product = data?.data;
 
-  const imageParam = Number(params.image) || 1;
+  const imageParam = Number(searchParams.get("image")) || 1;
   const productImages = product.images || [];
   const currentImage = productImages[imageParam - 1];
   const url = currentImage.url || "";

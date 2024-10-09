@@ -2,11 +2,9 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { BadgeCheck, ShoppingBasket } from "lucide-react";
-import { auth } from "@/auth";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { QueryCache, useMutation } from "@tanstack/react-query";
-import { addToCartMutationFn } from "@/api/products/products.mutation";
+import { useMutation } from "@tanstack/react-query";
+import { addToCartMutationFn } from "@/api/cart/cart.mutation";
 import { useRouter } from "next/navigation";
 import { handleUnauthorizedError } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";

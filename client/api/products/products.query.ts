@@ -1,6 +1,5 @@
 import { getAuthorizationToken } from "@/lib/actions/auth.actions";
 import { baseApi } from "@/lib/baseApi";
-import { getQueryParams } from "@/lib/utils";
 import axios, { AxiosResponse } from "axios";
 
 // All products
@@ -45,8 +44,6 @@ export const getProducts = async ({
   }
 
   const token = await getAuthorizationToken();
-
-  console.log(token);
 
   const promise: AxiosResponse<Product[]> = await baseApi.get(`/products`, {
     params: queries,

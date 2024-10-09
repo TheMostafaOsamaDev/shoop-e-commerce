@@ -69,16 +69,6 @@ export class ProductController {
     return this.productService.getSingleProduct(id, req);
   }
 
-  @Patch(':id/cart')
-  @UseGuards(UserGuard)
-  addToCart(
-    @Param('id') id: string,
-    @Query('quantity', new DefaultValuePipe(1), ParseIntPipe) quantity: number,
-    @Req() req: Request,
-  ) {
-    return this.productService.addToCart(id, quantity, req);
-  }
-
   @Patch(':id/wishlist')
   @UseGuards(UserGuard)
   toggleWishlist(@Param('id') id: string, @Req() req: Request) {

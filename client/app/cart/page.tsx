@@ -1,15 +1,26 @@
-import { Metadata } from "next";
+"use client";
+import {
+  getCartItemsQueryFn,
+  getCartItemsQueryKey,
+} from "@/api/cart/cart.query";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import React from "react";
 
-export const metadata: Metadata = {
-  title: "Cart",
-  description:
-    "See what you have in your cart, and checkout to enjoy your new items.",
-};
+export default function CartPage() {
+  const { data: session } = useSession();
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: getCartItemsQueryKey(session?.user?.id),
+    queryFn: ({ signal }) => getCartItemsQueryFn({ signal }),
+    enabled: !session?.user?.id,
+  });
 
-export default async function CartPage() {
-  try {
-  } catch (error) {}
+  console.log({ data, isPending, error, isError });
 
-  return <div className="min-h-screen container">page</div>;
+  return (
+    <div className="min-h-screen container">
+      <div></div>
+      <div></div>
+    </div>
+  );
 }
