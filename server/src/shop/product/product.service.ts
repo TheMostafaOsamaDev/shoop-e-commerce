@@ -30,13 +30,6 @@ export class ProductService {
     const userId = req?.user?.id;
     let where = {};
 
-    console.log({
-      limit,
-      offset,
-      category,
-      subCategory,
-    });
-
     if (category) {
       where = {
         ...where,
@@ -57,6 +50,10 @@ export class ProductService {
       include: [],
     };
 
+    console.log('~~~~~~~~~~ ProductService ~~~~~~~~~~');
+    console.log({
+      userId,
+    });
     if (userId) {
       include.push({
         model: Wishlist,

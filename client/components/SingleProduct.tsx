@@ -1,18 +1,19 @@
 "use client";
-
 import {
   getSingleProductQueryFn,
   getSingleProductQueryKey,
 } from "@/api/products/products.query";
 import { getAssetsUrl } from "@/lib/utils";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { notFound, useParams, usePathname } from "next/navigation";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useParams, usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "./ui/separator";
 import CartButton from "./CartButton";
 import WishListButton from "./WishListButton";
-import { AxiosResponse } from "axios";
+import SectionHeader from "./SectionHeader";
+import SimilarProducts from "./SimilarProducts";
+import { useSession } from "next-auth/react";
 
 export default function SingleProduct() {
   const params = useParams();
@@ -26,6 +27,7 @@ export default function SingleProduct() {
     queryFn: async ({ signal }) =>
       getSingleProductQueryFn({ signal, productId }),
   });
+  const { data: session } = useSession();
 
   const product = data?.data;
 
@@ -91,16 +93,28 @@ export default function SingleProduct() {
               productId={productId}
               returnUrl={pathname}
               isInCart={product?.isInCart}
+              session={session}
             />
 
             <WishListButton
               productId={productId}
               buttonClassName="h-fit p-5"
               isWishList={product?.isInWishlist}
+              disabled={!session?.user}
             />
           </div>
         </div>
       </div>
+
+      <SectionHeader separatorClasses="my-8">
+        <h2>Similar Products</h2>
+        <p>You might also like these products based on your recent activity.</p>
+      </SectionHeader>
+
+      <SimilarProducts
+        category={data?.data?.category}
+        subCategory={data?.data?.subCategory}
+      />
     </>
   );
 }

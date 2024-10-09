@@ -2,7 +2,6 @@ import { getAuthorizationToken } from "@/lib/actions/auth.actions";
 import { baseApi } from "@/lib/baseApi";
 import { getQueryParams } from "@/lib/utils";
 import axios, { AxiosResponse } from "axios";
-import { sign } from "crypto";
 
 // All products
 export const getProducts = async ({
@@ -21,8 +20,40 @@ export const getProducts = async ({
   const CancelToken = axios.CancelToken;
 
   const source = CancelToken.source();
+  let queries: {
+    limit: number;
+    offset: number;
+    category?: string;
+    subCategory?: string;
+  } = {
+    limit: limit || 12,
+    offset: offset || 0,
+  };
 
-  const promise: AxiosResponse<Product[]> = await baseApi.get(`/products`, {});
+  if (category) {
+    queries = {
+      ...queries,
+      category,
+    };
+  }
+
+  if (subCategory) {
+    queries = {
+      ...queries,
+      subCategory,
+    };
+  }
+
+  const token = await getAuthorizationToken();
+
+  console.log(token);
+
+  const promise: AxiosResponse<Product[]> = await baseApi.get(`/products`, {
+    params: queries,
+    headers: {
+      authorization: token,
+    },
+  });
 
   signal?.addEventListener("abort", () => {
     source.cancel();
@@ -35,10 +66,16 @@ export const getFeaturedProductsQuery = {
   queryKey: ["getFeaturedProducts"],
   queryFn: async ({
     signal,
-    queryKey,
+    limit,
+    offset,
+    category,
+    subCategory,
   }: {
     signal: AbortSignal;
-    queryKey: any;
+    limit?: number;
+    offset?: number;
+    category?: string;
+    subCategory?: string;
   }) => {
     return getProducts({ signal, limit: 12 });
   },

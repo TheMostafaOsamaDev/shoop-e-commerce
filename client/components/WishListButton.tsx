@@ -28,6 +28,18 @@ export default function WishListButton({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: getSingleProductQueryKey(productId.toString()),
+        // [
+
+        //   ["getSimilarProducts", { productId: productId.toString() }],
+        // ],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["getSimilarProducts", { productId: productId.toString() }],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["getFeaturedProducts"],
       });
     },
     // onMutate: () => {

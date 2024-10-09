@@ -15,6 +15,7 @@ import { getQueryClient } from "./providers/QueryClientProvider";
 import { getSingleProductQueryKey } from "@/api/products/products.query";
 import DotsLoader from "./DotsLoader";
 import clsx from "clsx";
+import { Session } from "next-auth";
 
 const buttonClasses =
   "btn-icon-container justify-between h-[60px] px-6 rounded-full block w-full";
@@ -23,12 +24,13 @@ export default function CartButton({
   productId,
   returnUrl,
   isInCart,
+  session,
 }: {
   productId: string;
   returnUrl: string;
   isInCart?: boolean;
+  session: Session | null;
 }) {
-  const { data: session } = useSession();
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = getQueryClient();

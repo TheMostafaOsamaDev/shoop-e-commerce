@@ -1,14 +1,5 @@
-import { getSingleProduct } from "@/lib/actions/product.actions";
-import { ApiError } from "@/lib/api-error";
-import { getAssetsUrl } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 import React from "react";
 import { headers } from "next/headers";
-import CartButton from "@/components/CartButton";
-import SimilarProducts from "@/components/SimilarProducts";
-import { Separator } from "@/components/ui/separator";
 import SectionHeader from "@/components/SectionHeader";
 import {
   dehydrate,
@@ -55,16 +46,6 @@ export default async function SingleProductPage(props: {
       <HydrationBoundary state={dehydrate(queryClient)}>
         <SingleProduct />
       </HydrationBoundary>
-
-      <SectionHeader separatorClasses="my-8">
-        <h2>Similar Products</h2>
-        <p>You might also like these products based on your recent activity.</p>
-      </SectionHeader>
     </div>
   );
 }
-
-// <SimilarProducts
-//   category={product?.category}
-//   subCategory={product?.subCategory}
-// />;

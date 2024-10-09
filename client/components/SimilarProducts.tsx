@@ -1,35 +1,52 @@
+"use client";
 import { ApiError } from "@/lib/api-error";
 import MessageAlert from "./MessageAlert";
-import { getFeaturedProducts } from "@/lib/actions/product.actions";
 import ProductGrid from "./ProductGrid";
-import { auth } from "@/auth";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { getProducts } from "@/api/products/products.query";
+import { useSession } from "next-auth/react";
+import ProductCard from "./ProductCard";
 
-export default async function SimilarProducts({
+export default function SimilarProducts({
   category,
   subCategory,
 }: {
   category?: string;
   subCategory?: string;
 }) {
+  const params = useParams();
+  const { data: session } = useSession();
+  const { data: productsData } = useQuery({
+    queryKey: ["getSimilarProducts", { productId: params.productId }],
+    queryFn: ({ signal }) =>
+      getProducts({
+        signal,
+        limit: 5,
+        category,
+        // subCategory,
+      }),
+  });
+  const isAdmin = session?.user?.role === "admin";
+  console.log("~~~~~~~~~~~~ SimilarProducts ~~~~~~~~~~~~");
+  console.log(productsData);
+
   let content;
   try {
-    const session = await auth();
-
-    const res = await getFeaturedProducts({
-      category: "",
-      subCategory: "",
-      limit: 4,
-      offset: 0,
-    });
-
-    if (res?.data?.getFeaturedProducts) {
-      const products = res.data.getFeaturedProducts as Product[];
-
+    if (productsData) {
+      const products = productsData.data;
       content = (
-        <ProductGrid
-          products={products}
-          isAdmin={session?.user?.role === "admin"}
-        />
+        <div className="products-grid">
+          {products
+            .filter((p) => p.id.toString() !== params.productId)
+            .map((p) => {
+              return (
+                <div key={`products_grid_${p.id}`}>
+                  <ProductCard p={p} isAdmin={isAdmin} />
+                </div>
+              );
+            })}
+        </div>
       );
     } else {
       content = (
@@ -54,3 +71,7 @@ export default async function SimilarProducts({
 
   return <div>{content}</div>;
 }
+
+const SimilarProductsSkeleton = () => {
+  return <div className="products-grid"></div>;
+};

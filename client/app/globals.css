@@ -138,6 +138,11 @@
 }
 
 @layer utilities {
+  .products-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+  }
+
+  /* Btn Icon Container */
   .btn-icon-container {
     @apply flex gap-2 items-center justify-start;
   }

@@ -36,6 +36,7 @@ export class ProductController {
   @Get()
   @ApiQueryDecorators(getProductsApiQuery)
   @ApiResponseDecorators(getProductsApiResponse)
+  @UseInterceptors(JwtDecoderInterceptor)
   getProducts(
     @Req() req: Request,
     @Query('limit', new DefaultValuePipe(12), ParseIntPipe) limit?: number,
