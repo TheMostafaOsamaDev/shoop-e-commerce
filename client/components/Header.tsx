@@ -9,6 +9,8 @@ import LoaderButton from "./ui/loader-btn";
 import { auth } from "@/auth";
 import DropdownProfile from "./DropdownProfile";
 
+const buttonStyleResponsive = "!hidden md:flex";
+
 const Header = () => {
   return (
     <header className="border-b" id="mainHeader">
@@ -30,7 +32,7 @@ const Header = () => {
             <AuthButtons />
           </Suspense>
 
-          <ModeToggle />
+          <ModeToggle className={buttonStyleResponsive} />
         </div>
       </div>
     </header>
@@ -50,13 +52,14 @@ const AuthButtons = async () => {
 
   const cartLink = (
     <Link href="/cart">
-      <ShoppingCart /> Cart
+      <ShoppingCart /> <span className={buttonStyleResponsive}>Cart</span>
     </Link>
   );
 
   const dashboardLink = (
     <Link href="/dashboard">
-      <LayoutDashboard /> Dashboard
+      <LayoutDashboard />
+      <span className={buttonStyleResponsive}>Dashboard</span>
     </Link>
   );
 
@@ -66,7 +69,11 @@ const AuthButtons = async () => {
     </Button>
   );
 
-  const primaryButton = session?.user ? <DropdownProfile /> : logInButton;
+  const primaryButton = session?.user ? (
+    <DropdownProfile className={buttonStyleResponsive} />
+  ) : (
+    logInButton
+  );
 
   return (
     <>

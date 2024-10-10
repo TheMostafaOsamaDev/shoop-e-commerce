@@ -11,7 +11,7 @@ export default function Footer() {
 
   return (
     <footer className="relative before:absolute before:content-[''] before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-[80%] before:h-[1px] before:bg-input mt-7">
-      <div className="container flex items-center justify-between">
+      <div className="container flex items-center justify-between flex-col-reverse gap-5 md:gap-0 md:flex-row">
         <div>&#169; {thisYear} Shoop!</div>
 
         <div className="flex items-center gap-1">

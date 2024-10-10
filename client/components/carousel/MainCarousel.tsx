@@ -86,8 +86,6 @@ export default function MainCarousel({
         Autoplay({
           delay: 3000,
           playOnInit: true,
-          // stopOnFocusIn: true,
-          // stopOnMouseEnter: true,
         }),
       ]}
       opts={{ loop: true }}

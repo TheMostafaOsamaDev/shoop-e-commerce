@@ -5,12 +5,12 @@ import OurProducts from "../components/OurProducts";
 export default function Home() {
   return (
     <div className="container">
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_500px] gap-5 items-center">
+      <section className="grid grid-cols-1 lg:grid-cols-[1fr_500px] gap-5 items-center">
         <MainCarousel
           className="overflow-hidden rounded-main"
-          height="h-[480px]"
+          height="h-[380px] lg:h-[480px]"
         />
-        <TopSellingProductCard />
+        <TopSellingProductCard height="!h-[480px]" />
       </section>
 
       {/* TODO: Add popular products */}

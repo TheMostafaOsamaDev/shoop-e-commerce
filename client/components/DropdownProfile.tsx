@@ -4,22 +4,21 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { logOut } from "@/lib/actions/auth.actions";
-import Link from "next/link";
+import clsx from "clsx";
 
-export default function DropdownProfile() {
+export default function DropdownProfile({ className }: { className?: string }) {
   const handleLogOut = async () => {
     await logOut();
   };
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className={clsx(className)}>
         <Button variant={"outline"} className="btn-icon-container">
           <User /> Profile <ChevronDown size={18} />
         </Button>
