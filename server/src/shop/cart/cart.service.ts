@@ -26,7 +26,6 @@ export class CartService {
             {
               model: ProductImage,
               as: 'images',
-              attributes: ['url'],
             },
           ],
         },

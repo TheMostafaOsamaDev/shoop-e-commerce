@@ -1,6 +1,7 @@
 import { getAuthorizationToken } from "@/lib/actions/auth.actions";
 import { baseApi } from "@/lib/baseApi";
-import axios from "axios";
+import { Cart } from "@/types/cart";
+import axios, { AxiosResponse } from "axios";
 
 export const getCartItemsQueryKey = (userId?: string) => ["cart", { userId }];
 
@@ -14,7 +15,7 @@ export const getCartItemsQueryFn = async ({
 
   const token = await getAuthorizationToken();
 
-  const promise = await baseApi.get(`/cart`, {
+  const promise: AxiosResponse<Cart[]> = await baseApi.get(`/cart`, {
     headers: {
       authorization: token,
     },
