@@ -10,11 +10,12 @@ import { USER_REPOSITORY } from './entities/user.provider';
 import { generateUsername } from 'src/utils/generate-username';
 import * as bcrypt from 'bcryptjs';
 import { hashPassword } from 'src/utils/hash-password';
-import { LoginAuthInput } from './input/login-auth.input';
 import { AdminAuthInput } from './input/admin-auth.input';
 import { ADMIN_REPOSITORY } from './entities/admin.provider';
 import { Admin } from './entities/admin.entity';
 import { LogInAuthDto } from './dto/login-auth-dto';
+import { UserDto } from './dto/user.dto';
+import { LogInAdminDto } from './dto/login-admin.dto';
 
 @Injectable()
 export class AuthService {
@@ -47,9 +48,7 @@ export class AuthService {
     };
   }
 
-  async logIn(logInAuthDto: LogInAuthDto) {
-    console.log(logInAuthDto);
-
+  async logIn(logInAuthDto: LogInAuthDto): Promise<UserDto> {
     const user = await this.userRepository.findOne({
       where: { email: logInAuthDto.email },
     });
@@ -73,22 +72,24 @@ export class AuthService {
     };
   }
 
-  async adminAuth(adminAuthInput: AdminAuthInput) {
-    const isValidPasskey = adminAuthInput.passkey === process.env.ADMIN_PASSKEY;
+  async logInAdmin(logInAdminDto: LogInAdminDto) {
+    const { email, passkey } = logInAdminDto;
+
+    const isValidPasskey = passkey === process.env.ADMIN_PASSKEY;
 
     if (!isValidPasskey) {
       throw new NotFoundException('Admin not found');
     }
 
     let admin = await this.adminRepository.findOne({
-      where: { email: adminAuthInput.email },
+      where: { email },
     });
 
     if (!admin) {
       admin = await this.adminRepository.create({
-        email: adminAuthInput.email,
-        passkey: adminAuthInput.passkey,
-        username: generateUsername(adminAuthInput.email, true),
+        email,
+        passkey,
+        username: generateUsername(email, true),
       });
     }
 

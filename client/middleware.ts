@@ -7,6 +7,7 @@ export default auth((req) => {
   const isAdminRoute = req.nextUrl.pathname.includes("/dashboard");
   const isProtectedRoute = protected_routes.includes(req.nextUrl.pathname);
   const newUrl = new URL("/", req.nextUrl.origin);
+  const authUrl = new URL("/auth/log-in", req.nextUrl.origin);
 
   const isAdmin = req.auth?.user?.role === "admin";
 
@@ -15,12 +16,11 @@ export default auth((req) => {
   }
 
   if (isAdminRoute && !isAdmin) {
-    const authUrl = new URL("/auth/log-in", req.nextUrl.origin);
     return Response.redirect(authUrl);
   }
 
   if (isProtectedRoute && !req.auth) {
-    return Response.redirect(newUrl);
+    return Response.redirect(authUrl);
   }
 
   return NextResponse.next();

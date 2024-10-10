@@ -10,18 +10,18 @@ import { AdminModel } from './models/admin.model';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation(() => AuthModel)
-  async createUser(@Args('createAuthInput') createAuthInput: CreateAuthInput) {
-    return this.authService.createUser(createAuthInput);
-  }
+  //  @Mutation(() => AuthModel)
+  //   async createUser(@Args('createAuthInput') createAuthInput: CreateAuthInput) {
+  //     return this.authService.createUser(createAuthInput);
+  //   }
 
-  // @Query(() => AuthModel)
-  // async logIn(@Args('logInAuthInput') logInAuthInput: LoginAuthInput) {
-  //   return this.authService.logIn(logInAuthInput);
-  // }
+  //   // @Query(() => AuthModel)
+  //   // async logIn(@Args('logInAuthInput') logInAuthInput: LoginAuthInput) {
+  //   //   return this.authService.logIn(logInAuthInput);
+  //   // }
 
-  @Query(() => AdminModel)
-  async adminAuth(@Args('adminAuthInput') adminAuthInput: AdminAuthInput) {
-    return this.authService.adminAuth(adminAuthInput);
-  }
+  //   @Query(() => AdminModel)
+  //   async adminAuth(@Args('adminAuthInput') adminAuthInput: AdminAuthInput) {
+  //     return this.authService.adminAuth(adminAuthInput);
+  //   }
 }

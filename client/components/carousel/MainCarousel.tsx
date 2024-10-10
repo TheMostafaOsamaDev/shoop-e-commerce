@@ -107,7 +107,7 @@ export default function MainCarousel({
         </span>
         <p
           className={clsx(
-            "text-sm font-medium h-full w-full p-1 px-3 flex items-center backdrop-blur-[10px] rounded-main flex-1",
+            "text-xs md:text-sm font-medium h-full w-full p-1 px-3 flex items-center backdrop-blur-[10px] rounded-main flex-1",
             carouselData[current].textColor,
             `${carouselData[current].thunderBg} bg-opacity-45`
           )}

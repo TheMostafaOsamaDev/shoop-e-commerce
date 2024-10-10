@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Label } from "../ui/label";
 import { apolloClient } from "@/lib/apollo-client";
-import { ADMIN_AUTH } from "@/lib/queries/auth.query";
+// import { ADMIN_AUTH } from "@/lib/queries/auth.query";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -66,21 +66,21 @@ export function AdminForm({ text }: { text?: string }) {
         passkey,
       };
 
-      const data = await apolloClient.query({
-        query: ADMIN_AUTH,
-        variables: {
-          adminAuthInput,
-        },
-      });
+      // const data = await apolloClient.query({
+      //   query: ADMIN_AUTH,
+      //   variables: {
+      //     adminAuthInput,
+      //   },
+      // });
 
-      if (data?.data?.adminAuth)
-        await logIn({
-          ...data.data.adminAuth,
-          role: "admin",
-        });
-      else throw new Error("Invalid credentials");
+      // if (data?.data?.adminAuth)
+      //   await logIn({
+      //     ...data.data.adminAuth,
+      //     role: "admin",
+      //   });
+      // else throw new Error("Invalid credentials");
 
-      router.push("/dashboard");
+      // router.push("/dashboard");
     } catch (error) {
       let err: any = ApiError.generate(error);
 

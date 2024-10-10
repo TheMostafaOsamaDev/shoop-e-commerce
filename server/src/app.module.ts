@@ -17,22 +17,22 @@ import { ShopModule } from './shop/shop.module';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: 'schema.gql',
-      playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault()],
-      transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
-      installSubscriptionHandlers: true,
-      buildSchemaOptions: {
-        directives: [
-          new GraphQLDirective({
-            name: 'upper',
-            locations: [DirectiveLocation.FIELD_DEFINITION],
-          }),
-        ],
-      },
-    }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: 'schema.gql',
+    //   playground: false,
+    //   plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    //   transformSchema: (schema) => upperDirectiveTransformer(schema, 'upper'),
+    //   installSubscriptionHandlers: true,
+    //   buildSchemaOptions: {
+    //     directives: [
+    //       new GraphQLDirective({
+    //         name: 'upper',
+    //         locations: [DirectiveLocation.FIELD_DEFINITION],
+    //       }),
+    //     ],
+    //   },
+    // }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),

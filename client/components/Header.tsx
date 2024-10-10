@@ -8,8 +8,9 @@ import { ModeToggle } from "./ToggleMode";
 import LoaderButton from "./ui/loader-btn";
 import { auth } from "@/auth";
 import DropdownProfile from "./DropdownProfile";
+import HeaderSheetMenu from "./HeaderSheetMenu";
 
-const buttonStyleResponsive = "!hidden md:flex";
+const buttonStyleResponsive = "!hidden md:!flex";
 
 const Header = () => {
   return (
@@ -79,6 +80,7 @@ const AuthButtons = async () => {
     <>
       {primaryButton}
       {secondButton}
+      <HeaderSheetMenu className="md:hidden" />
     </>
   );
 };
