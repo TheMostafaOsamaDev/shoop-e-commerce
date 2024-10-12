@@ -22,6 +22,7 @@ import { AdminForm } from "./AdminForm";
 import { useMutation } from "@tanstack/react-query";
 import { logInMutationFn } from "@/api/auth/auth.mutations";
 import { logIn } from "@/lib/actions/auth.actions";
+import { getQueryClient } from "../providers/QueryClientProvider";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -29,6 +30,11 @@ const formSchema = z.object({
 });
 
 export function LogInForm() {
+  const params = useSearchParams();
+  const returnUrl = params.get("returnUrl");
+  const router = useRouter();
+  const { toast } = useToast();
+
   const logInMutation = useMutation({
     mutationFn: logInMutationFn,
     onSuccess: async (data) => {
@@ -36,13 +42,14 @@ export function LogInForm() {
 
       if (logInData) {
         await logIn(logInData);
-        router.push(returnUrl || "/");
+        getQueryClient().resetQueries();
+        // router.push(returnUrl || "/");
+        // window.location.reload();
+        window.location.href = "/";
       }
     },
     onError: (error) => {
       let err: any = ApiError.generate(error);
-
-      console.log(error);
 
       if (err.status === 404) {
         err.action = (
@@ -58,10 +65,6 @@ export function LogInForm() {
       toast(err);
     },
   });
-  const router = useRouter();
-  const { toast } = useToast();
-  const params = useSearchParams();
-  const returnUrl = params.get("returnUrl");
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
