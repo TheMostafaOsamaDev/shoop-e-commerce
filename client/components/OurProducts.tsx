@@ -14,13 +14,8 @@ import { getFeaturedProductsQuery } from "@/api/products/products.query";
 export default async function OurProducts() {
   // Get the user session
   const session = await auth();
-  let content,
-    isAdmin = false;
+  let content;
   const queryClient = new QueryClient();
-
-  if (session?.user) {
-    isAdmin = session?.user?.role === "admin";
-  }
 
   try {
     void queryClient.prefetchQuery(getFeaturedProductsQuery);
@@ -36,7 +31,7 @@ export default async function OurProducts() {
   try {
     content = (
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <ProductGrid isAdmin={isAdmin} />
+        <ProductGrid />
       </HydrationBoundary>
     );
   } catch (error) {

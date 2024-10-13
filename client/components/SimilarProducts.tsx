@@ -18,7 +18,7 @@ export default function SimilarProducts({
   const params = useParams();
   const { data: session } = useSession();
   const { data: productsData } = useQuery({
-    queryKey: ["getSimilarProducts", { productId: params.productId }],
+    queryKey: ["getSimilarProducts", params.productId?.toString()],
     queryFn: ({ signal }) =>
       getProducts({
         signal,
@@ -27,25 +27,27 @@ export default function SimilarProducts({
         // subCategory,
       }),
   });
+
   const isAdmin = session?.user?.role === "admin";
-  console.log("~~~~~~~~~~~~ SimilarProducts ~~~~~~~~~~~~");
-  console.log(productsData);
 
   let content;
   try {
     if (productsData) {
-      const products = productsData.data;
+      const products = productsData.data.filter(
+        (p) => p.id.toString() !== params.productId
+      );
+      const filteredProducts =
+        products.length > 4 ? products.slice(0, 4) : products;
+
       content = (
         <div className="products-grid">
-          {products
-            .filter((p) => p.id.toString() !== params.productId)
-            .map((p) => {
-              return (
-                <div key={`products_grid_${p.id}`}>
-                  <ProductCard p={p} isAdmin={isAdmin} />
-                </div>
-              );
-            })}
+          {filteredProducts.map((p) => {
+            return (
+              <div key={`products_grid_${p.id}`}>
+                <ProductCard p={p} isAdmin={isAdmin} />
+              </div>
+            );
+          })}
         </div>
       );
     } else {

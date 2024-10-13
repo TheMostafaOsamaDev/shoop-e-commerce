@@ -1,6 +1,6 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { headers } from "next/headers";
-import SectionHeader from "@/components/SectionHeader";
+// import SectionHeader from "@/components/SectionHeader";
 import {
   dehydrate,
   HydrationBoundary,
@@ -22,12 +22,12 @@ export default async function SingleProductPage(props: {
   const { productId } = props.params;
   const headersList = headers();
   const fullUrl = headersList.get("referer") || "";
-  let parsedUrl,
-    pathname: string = "";
-  if (fullUrl) parsedUrl = new URL(fullUrl || "");
-  if (parsedUrl) pathname = parsedUrl.pathname;
 
-  let content;
+  let parsedUrl;
+  if (fullUrl) parsedUrl = new URL(fullUrl || "");
+
+  let pathname: string = "";
+  if (parsedUrl) pathname = parsedUrl.pathname;
 
   const queryClient = new QueryClient();
 
@@ -37,15 +37,15 @@ export default async function SingleProductPage(props: {
       queryFn: async ({ signal }) =>
         getSingleProductQueryFn({ signal, productId }),
     });
-  } catch (error) {
-    content = <MessageAlert title="" description="Error fetching product" />;
-  }
 
-  return (
-    <div className="sub-container min-h-[calc(100vh-var(--header-height)-25px)]">
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <SingleProduct />
-      </HydrationBoundary>
-    </div>
-  );
+    return (
+      <div className="sub-container min-h-[calc(100vh-var(--header-height)-25px)]">
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <SingleProduct />
+        </HydrationBoundary>
+      </div>
+    );
+  } catch (error) {
+    return <MessageAlert title="" description="Error fetching product" />;
+  }
 }

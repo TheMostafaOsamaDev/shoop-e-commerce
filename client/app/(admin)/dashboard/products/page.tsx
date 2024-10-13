@@ -1,8 +1,8 @@
 import React from "react";
 import ProductsBentoGrid from "./ProductsBentoGrid";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import Link from "next/link";
+// import { Plus } from "lucide-react";
 import SectionBanner from "@/components/SectionBanner";
 
 export default function Products() {

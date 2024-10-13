@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Control, FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import {
   Form,
@@ -15,8 +15,6 @@ import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
-import { ApiError } from "@/lib/api-error";
-import { ToastAction } from "../ui/toast";
 import {
   Select,
   SelectContent,
@@ -33,8 +31,6 @@ import {
   homeAndKitchenTypes,
 } from "@/lib/constants/products_types";
 import AddImageUploadDialog from "../AddImageUploadDialog";
-import { apolloClient } from "@/lib/apollo-client";
-import { CREATE_PRODUCT } from "@/lib/mutations/product.mutations";
 
 const formSchema = z.object({
   category: z
@@ -56,10 +52,10 @@ const formSchema = z.object({
 });
 
 export function AddProductForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [isLoading /* setIsLoading */] = useState(false);
+  // const router = useRouter();
   const { toast } = useToast();
-  const toLogIn = () => router.push("/auth/log-in");
+  // const toLogIn = () => router.push("/auth/log-in");
   const [images, setImages] = useState<string[]>([]);
 
   // 1. Define your form.
@@ -82,44 +78,44 @@ export function AddProductForm() {
       });
     }
 
-    try {
-      setIsLoading(true);
+    // try {
+    //   setIsLoading(true);
 
-      const reqData = {
-        ...values,
-        images,
-      };
+    //   const reqData = {
+    //     ...values,
+    //     images,
+    //   };
 
-      const res = await apolloClient.mutate({
-        mutation: CREATE_PRODUCT,
-        variables: {
-          createProductInput: reqData,
-        },
-      });
+    //   const res = await apolloClient.mutate({
+    //     mutation: CREATE_PRODUCT,
+    //     variables: {
+    //       createProductInput: reqData,
+    //     },
+    //   });
 
-      toast({
-        description: "Product added successfully",
-      });
+    //   toast({
+    //     description: "Product added successfully",
+    //   });
 
-      form.reset();
-      setImages([]);
-      // Refresh
-      window.location.reload();
-    } catch (error) {
-      let err: any = ApiError.generate(error);
+    //   form.reset();
+    //   setImages([]);
+    //   // Refresh
+    //   window.location.reload();
+    // } catch (error) {
+    //   let err: any = ApiError.generate(error);
 
-      if (err.status === 404) {
-        err.action = (
-          <ToastAction altText="Log in" onClick={toLogIn}>
-            Log in
-          </ToastAction>
-        );
-      }
+    //   if (err.status === 404) {
+    //     err.action = (
+    //       <ToastAction altText="Log in" onClick={toLogIn}>
+    //         Log in
+    //       </ToastAction>
+    //     );
+    //   }
 
-      toast(err);
-    } finally {
-      setIsLoading(false);
-    }
+    //   toast(err);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   }
 
   return (

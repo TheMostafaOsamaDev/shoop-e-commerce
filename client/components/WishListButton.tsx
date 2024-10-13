@@ -31,33 +31,13 @@ export default function WishListButton({
       });
 
       queryClient.invalidateQueries({
-        queryKey: ["getSimilarProducts", { productId: productId.toString() }],
+        queryKey: ["getSimilarProducts", productId.toString()],
       });
 
       queryClient.invalidateQueries({
         queryKey: ["getFeaturedProducts"],
       });
     },
-    // onMutate: () => {
-
-    //   // Editing cache not working currently
-    //   const previousData = queryClient.getQueriesData({
-    //     queryKey: getSingleProductQueryKey(productId.toString()),
-    //   });
-
-    //   // @ts-ignore
-    //   if (previousData?.[0]?.[1]?.data) {
-    //     // @ts-ignore
-    //     previousData[0][1].data.isWishList = !isWishList;
-
-    //     queryClient.setQueryData(
-    //       getSingleProductQueryKey(productId.toString()),
-    //       previousData
-    //     );
-
-    //     return { previousData };
-    //   }
-    // },
   });
 
   const handleToggleWishList = async (e: React.FormEvent<HTMLFormElement>) => {

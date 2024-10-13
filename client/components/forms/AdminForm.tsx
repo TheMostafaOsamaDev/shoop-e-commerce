@@ -15,8 +15,6 @@ import { Input } from "@/components/ui/input";
 import SubmitButton from "../SubmitButton";
 import { useState } from "react";
 import { logIn } from "@/lib/actions/auth.actions";
-import { useRouter } from "next/navigation";
-import { ToastAction } from "@radix-ui/react-toast";
 import { ApiError } from "@/lib/api-error";
 import { useToast } from "../ui/use-toast";
 import {
@@ -35,18 +33,28 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "../ui/label";
-import { apolloClient } from "@/lib/apollo-client";
-// import { ADMIN_AUTH } from "@/lib/queries/auth.query";
+import { useMutation } from "@tanstack/react-query";
+import { authAdminMutationFn } from "@/api/auth/auth.mutations";
+import { getQueryClient } from "../providers/QueryClientProvider";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
 
 export function AdminForm({ text }: { text?: string }) {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const { toast } = useToast();
   const [passkey, setPasskey] = useState("");
+  const { toast } = useToast();
+  const adminAuthMutation = useMutation({
+    mutationFn: authAdminMutationFn,
+    onSuccess: async (data) => {
+      await logIn(data.data);
+      getQueryClient().resetQueries();
+      window.location.href = "/";
+    },
+    onError: (error) => {
+      toast(ApiError.generate(error));
+    },
+  });
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,46 +66,12 @@ export function AdminForm({ text }: { text?: string }) {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setIsLoading(true);
+    const adminAuthData = {
+      email: values.email,
+      passkey,
+    };
 
-      const adminAuthInput = {
-        email: values.email,
-        passkey,
-      };
-
-      // const data = await apolloClient.query({
-      //   query: ADMIN_AUTH,
-      //   variables: {
-      //     adminAuthInput,
-      //   },
-      // });
-
-      // if (data?.data?.adminAuth)
-      //   await logIn({
-      //     ...data.data.adminAuth,
-      //     role: "admin",
-      //   });
-      // else throw new Error("Invalid credentials");
-
-      // router.push("/dashboard");
-    } catch (error) {
-      let err: any = ApiError.generate(error);
-
-      if (err.status === 404) {
-        err.action = (
-          <ToastAction
-            altText="Log in"
-            onClick={() => router.push("/auth/sign-up")}
-          >
-            Log in
-          </ToastAction>
-        );
-      }
-
-      toast(err);
-      setIsLoading(false);
-    }
+    adminAuthMutation.mutate(adminAuthData);
   }
 
   return (
@@ -155,14 +129,14 @@ export function AdminForm({ text }: { text?: string }) {
               <AlertDialogCancel
                 asChild
                 className="w-full"
-                disabled={isLoading}
+                disabled={adminAuthMutation.isPending}
               >
                 <Button variant={"secondary"} type="reset">
                   Cancel
                 </Button>
               </AlertDialogCancel>
               <SubmitButton
-                isLoading={isLoading}
+                isLoading={adminAuthMutation.isPending}
                 text="Log in"
                 isDisabled={!passkey}
               />

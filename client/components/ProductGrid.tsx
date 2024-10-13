@@ -1,26 +1,19 @@
 "use client";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { getAssetsUrl, sliceText } from "@/lib/utils";
-import Image from "next/image";
-import WishListButton from "./WishListButton";
-import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getFeaturedProductsQuery } from "@/api/products/products.query";
 import ProductCard from "./ProductCard";
+import { useSession } from "next-auth/react";
 
-export default function ProductGrid(props: { isAdmin: boolean }) {
-  const {
-    data: { data: products },
-  } = useSuspenseQuery(getFeaturedProductsQuery);
-
-  const { isAdmin } = props;
+export default function ProductGrid() {
+  const { data } = useSuspenseQuery(getFeaturedProductsQuery);
+  const { data: session } = useSession();
 
   return (
     <div className="products-grid">
-      {products.map((p) => {
+      {data?.data.map((p) => {
         return (
           <div key={`products_grid_${p.id}`}>
-            <ProductCard p={p} isAdmin={isAdmin} />
+            <ProductCard p={p} isAdmin={session?.user?.role === "admin"} />
           </div>
         );
       })}

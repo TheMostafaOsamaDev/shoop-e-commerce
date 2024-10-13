@@ -4,16 +4,13 @@ import UploadProductsSheet from "@/components/UploadProductsSheet";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import { Button } from "@/components/ui/button";
-import { ApiError } from "@/lib/api-error";
 import { useToast } from "@/components/ui/use-toast";
-import { createMultipleProducts } from "@/lib/actions/product.actions";
-import { categoryFormatter } from "@/lib/utils";
+// import { createMultipleProducts } from "@/lib/actions/product.actions";
 
 export default function AddMultipleProducts() {
   const [tableData, setTableData] = React.useState<any[]>([]);
-  const { toast } = useToast();
-  const [loading, setLoading] = React.useState(false);
-  // TODO: Add a loading state
+  // const { toast } = useToast();
+  const [loading /* setLoading */] = React.useState(false);
 
   if (tableData.length === 0) {
     return (
@@ -27,42 +24,36 @@ export default function AddMultipleProducts() {
   }
 
   const handleSave = async () => {
-    try {
-      setLoading(true);
-
-      const preparedData = tableData.map((data) => {
-        return {
-          title: data?.Title,
-          price: +data?.Price?.replaceAll("$", "")?.trim(),
-          quantity: +data?.Quantity,
-          category: categoryFormatter(data?.Category),
-          subCategory: categoryFormatter(data?.["Sub category"]),
-          images: data?.Images?.split(",")?.map((image: string) =>
-            image.trim()
-          ),
-        };
-      });
-
-      const data = await createMultipleProducts(preparedData);
-
-      const count = data?.data?.createMultipleProducts?.counts;
-      const message = `${count} product${
-        count > 1 ? "s" : ""
-      } added successfully`;
-
-      toast({
-        description: message,
-      });
-
-      setTableData([]);
-    } catch (error) {
-      console.log(error);
-      const err = ApiError.generate(error);
-
-      toast(err);
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   setLoading(true);
+    //   const preparedData = tableData.map((data) => {
+    //     return {
+    //       title: data?.Title,
+    //       price: +data?.Price?.replaceAll("$", "")?.trim(),
+    //       quantity: +data?.Quantity,
+    //       category: categoryFormatter(data?.Category),
+    //       subCategory: categoryFormatter(data?.["Sub category"]),
+    //       images: data?.Images?.split(",")?.map((image: string) =>
+    //         image.trim()
+    //       ),
+    //     };
+    //   });
+    //   // const data = await createMultipleProducts(preparedData);
+    //   const count = data?.data?.createMultipleProducts?.counts;
+    //   const message = `${count} product${
+    //     count > 1 ? "s" : ""
+    //   } added successfully`;
+    //   toast({
+    //     description: message,
+    //   });
+    //   setTableData([]);
+    // } catch (error) {
+    //   console.log(error);
+    //   const err = ApiError.generate(error);
+    //   toast(err);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (

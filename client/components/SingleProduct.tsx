@@ -22,7 +22,7 @@ export default function SingleProduct() {
   const productId = Array.isArray(params.productId)
     ? params.productId[0]
     : params.productId;
-  const { data, isLoading, isFetching, isPending } = useSuspenseQuery({
+  const { data } = useSuspenseQuery({
     queryKey: getSingleProductQueryKey(productId),
     queryFn: async ({ signal }) =>
       getSingleProductQueryFn({ signal, productId }),
@@ -100,7 +100,7 @@ export default function SingleProduct() {
               productId={productId}
               buttonClassName="h-fit p-5"
               isWishList={product?.isInWishlist}
-              disabled={!session?.user}
+              disabled={session?.user?.role === "admin"}
             />
           </div>
         </div>

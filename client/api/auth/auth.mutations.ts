@@ -29,3 +29,15 @@ export const signUpMutationFn = async (body: {
 
   return promise;
 };
+
+export const authAdminMutationFn = async (body: {
+  email: string;
+  passkey: string;
+}) => {
+  const promise: AxiosResponse<IApiUser> = await baseApi.post(
+    "/auth/admin",
+    body
+  );
+
+  return promise;
+};

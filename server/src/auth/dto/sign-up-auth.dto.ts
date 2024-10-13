@@ -7,6 +7,7 @@ export class SignUpAuthDto {
   @ApiProperty({
     description: 'The email of the user',
     type: String,
+    example: 'folan@gmail.com',
   })
   @IsEmail({}, { message: 'Invalid email' })
   email: string;
