@@ -30,8 +30,6 @@ const formSchema = z.object({
 });
 
 export function LogInForm() {
-  const params = useSearchParams();
-  const returnUrl = params.get("returnUrl");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -43,8 +41,7 @@ export function LogInForm() {
       if (logInData) {
         await logIn(logInData);
         getQueryClient().resetQueries();
-        // router.push(returnUrl || "/");
-        // window.location.reload();
+
         window.location.href = "/";
       }
     },

@@ -6,11 +6,10 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import React from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CartPage() {
   const { data: session } = useSession();
-  const { data, isPending, isError, error } = useQuery({
+  const { data } = useQuery({
     queryKey: getCartItemsQueryKey(session?.user?.id),
     queryFn: ({ signal }) => getCartItemsQueryFn({ signal }),
     enabled: !session?.user?.id,
@@ -51,6 +50,7 @@ const CartItemsTable = ({ cartItems }: { cartItems: Cart[] }) => {
           <TableHead>Title</TableHead>
           <TableHead className="text-center">Quantity</TableHead>
           <TableHead>Price</TableHead>
+          <TableHead>Delete</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -97,15 +97,11 @@ const CartItemsTable = ({ cartItems }: { cartItems: Cart[] }) => {
               <TableCell className="text-nowrap font-medium">
                 $ {p.price}
               </TableCell>
+
+              <TableCell></TableCell>
             </TableRow>
           );
         })}
-        {/* <TableRow>
-          <TableCell className="font-medium">INV001</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>Credit Card</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
-        </TableRow> */}
       </TableBody>
     </Table>
   );

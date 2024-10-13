@@ -12,19 +12,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "../SubmitButton";
-import { baseApi } from "@/lib/baseApi";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
-import { ApiError } from "@/lib/api-error";
-import { ToastAction } from "../ui/toast";
-import { ApiResponse } from "@/types/api";
-import { IApiUser } from "@/types/user";
-import { logIn } from "@/lib/actions/auth.actions";
+
 import { Button } from "../ui/button";
 import Link from "next/link";
-import { CREATE_USER } from "@/lib/mutations/auth.mutations";
-import { apolloClient } from "@/lib/apollo-client";
+import { useMutation } from "@tanstack/react-query";
+import { signUpMutationFn } from "@/api/auth/auth.mutations";
+import { ApiError } from "@/lib/api-error";
+import { getQueryClient } from "../providers/QueryClientProvider";
+import { logIn } from "@/lib/actions/auth.actions";
 
 const formSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters"),
@@ -34,10 +30,27 @@ const formSchema = z.object({
 });
 
 export function SignUpForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
   const { toast } = useToast();
-  const toLogIn = () => router.push("/auth/log-in");
+  const signUpMutation = useMutation({
+    mutationFn: signUpMutationFn,
+    onError: (error) => {
+      const err = ApiError.generate(error);
+
+      toast(err);
+    },
+    onSuccess: async (data) => {
+      toast({
+        title: "Account created successfully",
+      });
+
+      console.log(data?.data);
+      await logIn(data?.data);
+      getQueryClient().resetQueries();
+      window.location.href = "/";
+    },
+  });
+
+  console.log(signUpMutation.data);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,39 +65,7 @@ export function SignUpForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setIsLoading(true);
-
-      const data = await apolloClient.mutate({
-        mutation: CREATE_USER,
-        variables: {
-          createAuthInput: {
-            name: values.name,
-            email: values.email,
-            password: values.password,
-            confirmPassword: values.confirmPassword,
-          },
-        },
-      });
-
-      if (data?.data?.createUser) await logIn(data?.data?.createUser);
-      else throw new Error("An error occurred");
-
-      router.push("/auth/log-in");
-    } catch (error) {
-      let err: any = ApiError.generate(error);
-
-      if (err.status === 404) {
-        err.action = (
-          <ToastAction altText="Log in" onClick={toLogIn}>
-            Log in
-          </ToastAction>
-        );
-      }
-
-      toast(err);
-      setIsLoading(false);
-    }
+    signUpMutation.mutate(values);
   }
 
   return (
@@ -153,7 +134,7 @@ export function SignUpForm() {
           )}
         />
 
-        <SubmitButton isLoading={isLoading} text="Submit" />
+        <SubmitButton isLoading={signUpMutation.isPending} text="Submit" />
 
         <div className="flex items-center gap-1 text-sm">
           <p>You have an account already?</p>

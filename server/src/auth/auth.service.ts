@@ -1,16 +1,15 @@
+import { SignUpAuthDto } from './dto/sign-up-auth.dto';
 import {
   Inject,
   Injectable,
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { CreateAuthInput } from './input/create-auth.input';
 import { User } from './entities/user.entity';
 import { USER_REPOSITORY } from './entities/user.provider';
 import { generateUsername } from 'src/utils/generate-username';
 import * as bcrypt from 'bcryptjs';
 import { hashPassword } from 'src/utils/hash-password';
-import { AdminAuthInput } from './input/admin-auth.input';
 import { ADMIN_REPOSITORY } from './entities/admin.provider';
 import { Admin } from './entities/admin.entity';
 import { LogInAuthDto } from './dto/login-auth-dto';
@@ -24,23 +23,25 @@ export class AuthService {
     @Inject(ADMIN_REPOSITORY) private adminRepository: typeof Admin,
   ) {}
 
-  async createUser(createAuthDto: CreateAuthInput) {
+  async signUp(signUpAuthDto: SignUpAuthDto) {
     let user = await this.userRepository.findOne({
-      where: { email: createAuthDto.email },
+      where: { email: signUpAuthDto.email },
     });
 
     if (user) {
-      throw new Error('Email already exists');
+      throw new BadRequestException('Email already exists');
     }
 
-    const hashedPassword = await hashPassword(createAuthDto.password);
-    const username = generateUsername(createAuthDto.name);
+    const hashedPassword = await hashPassword(signUpAuthDto.password);
+    const username = generateUsername(signUpAuthDto.name);
 
     user = await this.userRepository.create({
-      ...createAuthDto,
+      ...signUpAuthDto,
       password: hashedPassword,
       username,
     });
+
+    console.log(user);
 
     return {
       ...user.toJSON(),
