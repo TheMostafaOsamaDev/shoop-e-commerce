@@ -229,4 +229,40 @@
   .dots-loader span:nth-child(3) {
     @apply delay-500;
   }
+
+  /* Responsive Table */
+
+  @media (width < 1024px) {
+    .table-responsive thead {
+      @apply hidden;
+    }
+
+    .table-responsive tbody tr {
+      @apply flex flex-col;
+    }
+
+    .table-responsive tbody tr:hover {
+      @apply bg-background;
+    }
+
+    .table-responsive .cart-image img {
+      @apply w-full;
+    }
+
+    .table-responsive .cart-product-quantity {
+      @apply flex flex-col;
+    }
+
+    .table-responsive .cart-product-quantity button {
+      @apply w-full py-3 text-lg block;
+    }
+
+    .table-responsive .cart-product-quantity span {
+      @apply text-lg before:content-['Quantity:'] before:pr-3;
+    }
+
+    .table-responsive .price {
+      @apply text-lg bg-primary w-full rounded-full py-2 px-3 block text-white before:content-['Price:'] before:pr-3;
+    }
+  }
 }

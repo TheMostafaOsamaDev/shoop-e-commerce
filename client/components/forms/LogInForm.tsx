@@ -40,9 +40,7 @@ export function LogInForm() {
 
       if (logInData) {
         await logIn(logInData);
-        getQueryClient().resetQueries();
-
-        window.location.href = "/";
+        window.location.reload();
       }
     },
     onError: (error) => {
