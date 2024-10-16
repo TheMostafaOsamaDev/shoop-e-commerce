@@ -7,15 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Cart } from "@/types/cart";
-import Image from "next/image";
-import { getAssetsUrl } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { signal } from "@preact/signals";
-import DeleteCartProduct from "../DeleteCartProduct";
+// import { signal } from "@preact/signals";
 import { Skeleton } from "../ui/skeleton";
 
-const quantitySignal = signal<number>();
+// const quantitySignal = signal<number>();
 
 const CartItemsTableSkeleton = ({ skeletonSize }: { skeletonSize: number }) => {
   const skeletonArray = Array.from({ length: skeletonSize });

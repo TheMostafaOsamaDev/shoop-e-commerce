@@ -9,7 +9,7 @@ export default function ProductCard({
   p,
   isAdmin,
 }: {
-  p: any;
+  p: Product;
   isAdmin: boolean;
 }) {
   return (

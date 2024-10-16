@@ -23,7 +23,7 @@ export default function TokenRefresherProvider({
     };
 
     handleAuthorization();
-  }, [path]);
+  }, [path, session?.user]);
 
   useEffect(() => {}, []);
 

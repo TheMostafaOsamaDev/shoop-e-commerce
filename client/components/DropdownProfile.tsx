@@ -16,7 +16,6 @@ export default function DropdownProfile({ className }: { className?: string }) {
   const handleLogOut = async () => {
     await logOut();
     getQueryClient().resetQueries();
-    window.location.reload();
   };
 
   return (

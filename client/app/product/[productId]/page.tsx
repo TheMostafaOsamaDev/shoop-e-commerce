@@ -1,5 +1,3 @@
-import React, { ReactNode } from "react";
-import { headers } from "next/headers";
 // import SectionHeader from "@/components/SectionHeader";
 import {
   dehydrate,
@@ -20,14 +18,6 @@ export default async function SingleProductPage(props: {
   searchParams: SearchParams;
 }) {
   const { productId } = props.params;
-  const headersList = headers();
-  const fullUrl = headersList.get("referer") || "";
-
-  let parsedUrl;
-  if (fullUrl) parsedUrl = new URL(fullUrl || "");
-
-  let pathname: string = "";
-  if (parsedUrl) pathname = parsedUrl.pathname;
 
   const queryClient = new QueryClient();
 

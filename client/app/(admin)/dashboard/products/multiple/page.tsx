@@ -4,12 +4,9 @@ import UploadProductsSheet from "@/components/UploadProductsSheet";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-// import { createMultipleProducts } from "@/lib/actions/product.actions";
 
 export default function AddMultipleProducts() {
   const [tableData, setTableData] = React.useState<any[]>([]);
-  // const { toast } = useToast();
   const [loading /* setLoading */] = React.useState(false);
 
   if (tableData.length === 0) {

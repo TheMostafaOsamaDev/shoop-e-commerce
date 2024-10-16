@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import SubmitButton from "../SubmitButton";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ToastAction } from "@radix-ui/react-toast";
 import { ApiError } from "@/lib/api-error";
 import { useToast } from "../ui/use-toast";
@@ -40,11 +40,11 @@ export function LogInForm() {
 
       if (logInData) {
         await logIn(logInData);
-        window.location.reload();
+        getQueryClient().invalidateQueries();
       }
     },
     onError: (error) => {
-      let err: any = ApiError.generate(error);
+      const err: any = ApiError.generate(error);
 
       if (err.status === 404) {
         err.action = (

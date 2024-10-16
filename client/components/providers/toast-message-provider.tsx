@@ -1,7 +1,6 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { useToast } from "../ui/use-toast";
 import { Toaster } from "../ui/toaster";
 
 export default function ToastMessageProvider({
@@ -9,10 +8,10 @@ export default function ToastMessageProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
+  // const router = useRouter();
   const messageParam = useSearchParams().get("message") as string;
   const messageTypeParam = useSearchParams().get("messageType") as string;
-  const { toast } = useToast();
+  // const { toast } = useToast();
 
   useEffect(() => {
     if (messageParam) {

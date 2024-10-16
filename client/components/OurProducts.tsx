@@ -13,7 +13,6 @@ import { getFeaturedProductsQuery } from "@/api/products/products.query";
 
 export default async function OurProducts() {
   // Get the user session
-  const session = await auth();
   let content;
   const queryClient = new QueryClient();
 

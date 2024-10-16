@@ -14,7 +14,6 @@ interface UploadProductsSheetProps {
 
 export default function UploadProductsSheet({
   setTableData,
-  tableData,
 }: UploadProductsSheetProps) {
   const { toast } = useToast();
 
@@ -22,7 +21,6 @@ export default function UploadProductsSheet({
     const file = acceptedFiles[0];
 
     Papa.parse(file, {
-      // @ts-ignore
       complete: (result) => {
         if (result.data.length === 0) {
           return toast({
@@ -36,7 +34,7 @@ export default function UploadProductsSheet({
           ?.slice(1)
           ?.filter((row) => row[0] && row[1] && row[2] && row[3] && row[4])
           ?.map((row) => {
-            let objectData = {
+            const objectData = {
               Title: row[0],
               Category: row[1],
               "Sub category": row[2],
@@ -48,7 +46,7 @@ export default function UploadProductsSheet({
             data.push(objectData);
           });
 
-        setTableData(data as any[]);
+        setTableData(data);
       },
     });
   }, []);

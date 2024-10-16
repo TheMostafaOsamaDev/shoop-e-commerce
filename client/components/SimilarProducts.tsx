@@ -1,7 +1,6 @@
 "use client";
 import { ApiError } from "@/lib/api-error";
 import MessageAlert from "./MessageAlert";
-import ProductGrid from "./ProductGrid";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { getProducts } from "@/api/products/products.query";
@@ -10,8 +9,8 @@ import ProductCard from "./ProductCard";
 
 export default function SimilarProducts({
   category,
-  subCategory,
-}: {
+}: // subCategory,
+{
   category?: string;
   subCategory?: string;
 }) {
@@ -73,7 +72,3 @@ export default function SimilarProducts({
 
   return <div>{content}</div>;
 }
-
-const SimilarProductsSkeleton = () => {
-  return <div className="products-grid"></div>;
-};
